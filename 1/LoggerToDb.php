@@ -13,10 +13,8 @@ class LoggerToDb implements LoggerInterface
 //    }
 
     public function warning($message){
-        $dbh = $this->connectToDb();
-
-
-        $statement = $dbh->prepare("INSERT INTO `log` (`message`, `type`, `creation_date`) values (?, ?, ?)");
+        
+        $statement = $this->_saveMessageToDb();
         $inserted = $statement->execute([$message, 'warning', date('Y-m-d H:i:s')]);
         //todo вместо warning лучше просто 1-2-3 указать
 
@@ -24,30 +22,33 @@ class LoggerToDb implements LoggerInterface
     }
 
     public function error($message){
-        $dbh = $this->connectToDb();
 
-        $statement = $dbh->prepare("INSERT INTO `log` (`message`, `type`, `creation_date`) values (?, ?, ?)");
+        $statement = $this->_saveMessageToDb();
         $inserted = $statement->execute([$message, 'error', date('Y-m-d H:i:s')]);
 
         print("$inserted lines added.\n");
     }
 
     public function notice($message){
-        $dbh = $this->connectToDb();
-
-        $statement = $dbh->prepare("INSERT INTO `log` (`message`, `type`, `creation_date`) values (?, ?, ?)");
+        
+        $statement = $this->_saveMessageToDb();
         $inserted = $statement->execute([$message, 'notice', date('Y-m-d H:i:s')]);
 
         print("$inserted lines added.\n");
     }
 
-    private function connectToDb(){
+    private function _connectToDb(){
         $dsn = 'mysql:dbname=test;host=127.0.0.1';
         $user = 'root';
         $password = '';
 
         $dbh = new PDO($dsn, $user, $password);
         return $dbh;
+    }
+
+    private function _saveMessageToDb(){
+        $dbh = $this->_connectToDb();
+        return $dbh->prepare("INSERT INTO `log` (`message`, `type`, `creation_date`) values (?, ?, ?)");
     }
 
 }
