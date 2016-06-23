@@ -1,5 +1,6 @@
 <?php
 return [
     'mode' => 0,
-    'pathToLogFile' => 'log.txt',
+    'logFilesDir' => DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR,
+    'logFilePath' => 'log.txt',
 ];

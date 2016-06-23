@@ -1,6 +1,6 @@
 <?php
 
-include_once __DIR__ . '/config/configDb.php';
+include_once __DIR__ . '/../config/configDb.php';
 
 /**
  * Class Db - common class to work with Database
@@ -58,7 +58,7 @@ class Db
      * @return mixed
      */
     private function _getDbConfig(){
-        return $configDb = require __DIR__ . '/configDb.php';
+        return $configDb = require __DIR__ . '/../config/configDb.php';
     }
 
 }

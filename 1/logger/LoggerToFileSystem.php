@@ -1,6 +1,6 @@
 <?php
 
-include_once 'LoggerAbstract.php';
+include_once __DIR__ . '/LoggerAbstract.php';
 
 class LoggerToFileSystem extends LoggerAbstract
 {
@@ -27,12 +27,18 @@ class LoggerToFileSystem extends LoggerAbstract
     }
 
     /**
-     * Gets log File path
+     * Gets log File full path
      * @return mixed
      */
-    private function _getLogFilePath(){
-        $config = require __DIR__ . '/config.php';
-        return $config['pathToLogFile'];
+    public function _getLogFilePath(){
+        $config = require __DIR__ . '/../config/config.php';
+
+        $logFilesDir = DIRECTORY_SEPARATOR . '..' . $config['logFilesDir'];
+        $logFilePath = $config['logFilePath'];
+
+        $logFileFullPath = __DIR__ . $logFilesDir . $logFilePath;
+        
+        return $logFileFullPath;
     }
     
 }

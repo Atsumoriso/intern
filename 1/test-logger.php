@@ -1,7 +1,7 @@
 <?php
-include_once __DIR__ . '/LoggerToDb.php';
-include_once __DIR__ . '/LoggerToFileSystem.php';
-include_once __DIR__ . '/LogEntry.php';
+include_once __DIR__ . '/logger/LoggerToDb.php';
+include_once __DIR__ . '/logger/LoggerToFileSystem.php';
+include_once __DIR__ . '/logger/LogEntry.php';
 $config = require __DIR__ . '/config/config.php';
 
 
@@ -28,4 +28,7 @@ elseif ($config['mode'] == LogEntry::MODE_PROD) {
     $loggerToFileSystem->error('Achtung, please! Warning!');
     $loggerToDb->error('Error occured');
 }
+
+
+
 
