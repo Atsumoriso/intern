@@ -1,7 +1,12 @@
 <?php
 
-
-Interface LoggerInterface
+/**
+ * Interface LoggerInterface
+ *
+ * declares methods for logger
+ * 
+ */
+interface LoggerInterface
 {
     public function warning($message);
 

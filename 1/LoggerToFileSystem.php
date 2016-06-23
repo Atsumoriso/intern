@@ -1,34 +1,38 @@
 <?php
 
-include_once 'LoggerInterface.php';
+include_once 'LoggerAbstract.php';
 
-class LoggerToFileSystem implements LoggerInterface
+class LoggerToFileSystem extends LoggerAbstract
 {
-    public $filePath = 'log.txt';
-//    public $warningMessage = 'Warning!';
-//    public $errorMessage   = 'Error!';
-//    public $noticeMessage  = 'Notice!';
-
-    public function warning($message){
-        $message = "$message\n";
-        $this->_writeLogTofile($message);
-        echo "Warning added to log file successfully";
+    /**
+     * Writing data to Log file
+     * @param $logMessage
+     * @param $logType
+     */
+    protected function _writeLogData($logMessage, $logType)
+    {
+        $message = $this->_getLogMessage($logMessage, $logType);
+        file_put_contents($this->_getLogFilePath(),$message."\n",FILE_APPEND);
     }
 
-    public function error($message){
-        $message = "$message\n";
-        $this->_writeLogTofile($message);
-        echo "Error added to log file successfully";
+    /**
+     * States format of message
+     * @param $logMessage
+     * @param $logType
+     * @return string
+     */
+    protected function _getLogMessage($logMessage, $logType)
+    {
+        return date('Y-m-d H:i:s') . ' - ' . $logType . ' - ' . $logMessage;
     }
 
-    public function notice($message){
-        $message = "$message\n";
-        $this->_writeLogTofile($message);
-        echo "Notice added to log file successfully";
+    /**
+     * Gets log File path
+     * @return mixed
+     */
+    private function _getLogFilePath(){
+        $config = require __DIR__ . '/config.php';
+        return $config['pathToLogFile'];
     }
-
-    private function _writeLogTofile($message){
-        file_put_contents($this->filePath,$message,FILE_APPEND);
-    }
-
+    
 }

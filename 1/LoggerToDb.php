@@ -1,54 +1,45 @@
 <?php
 
-include_once 'LoggerInterface.php';
+include_once __DIR__ . '/LoggerAbstract.php';
+include_once __DIR__ . '/Db.php';
 
-class LoggerToDb implements LoggerInterface
+/**
+ * Class LoggerToDb
+ *
+ * Writes log messages to Db
+ *
+ */
+class LoggerToDb extends LoggerAbstract
 {
-//    public $warningMessage = 'Warning!';
-//    public $errorMessage   = 'Error!';
-//    public $noticeMessage  = 'Notice!';
+    /*Connection to Db*/
+    private $_dbh;
 
-//    public function __construct($message){
-//        $this->message = $message;
-//    }
-
-    public function warning($message){
-        
-        $statement = $this->_saveMessageToDb();
-        $inserted = $statement->execute([$message, 'warning', date('Y-m-d H:i:s')]);
-        //todo вместо warning лучше просто 1-2-3 указать
-
-        print("$inserted lines added.\n");
+    /**
+     * LoggerToDb constructor.
+     * Establishing Db connection
+     */
+    public function __construct()
+    {
+        $connection = new Db();
+        $this->_dbh = $connection->connectToDb();
     }
 
-    public function error($message){
-
-        $statement = $this->_saveMessageToDb();
-        $inserted = $statement->execute([$message, 'error', date('Y-m-d H:i:s')]);
-
-        print("$inserted lines added.\n");
+    /**
+     * Writes log data to Db
+     * @param $logMessage
+     * @param $logType
+     */
+    protected function _writeLogData($logMessage, $logType)
+    {
+        $statement = $this->_dbh->prepare("
+            INSERT 
+            INTO `log` (
+                 `message`, 
+                 `type`, 
+                 `creation_date`
+                 ) 
+            VALUES (?, ?, ?)
+            ");
+        $statement->execute([$logMessage, $logType, date('Y-m-d H:i:s')]);
     }
-
-    public function notice($message){
-        
-        $statement = $this->_saveMessageToDb();
-        $inserted = $statement->execute([$message, 'notice', date('Y-m-d H:i:s')]);
-
-        print("$inserted lines added.\n");
-    }
-
-    private function _connectToDb(){
-        $dsn = 'mysql:dbname=test;host=127.0.0.1';
-        $user = 'root';
-        $password = '';
-
-        $dbh = new PDO($dsn, $user, $password);
-        return $dbh;
-    }
-
-    private function _saveMessageToDb(){
-        $dbh = $this->_connectToDb();
-        return $dbh->prepare("INSERT INTO `log` (`message`, `type`, `creation_date`) values (?, ?, ?)");
-    }
-
 }
