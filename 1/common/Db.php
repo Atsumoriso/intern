@@ -1,6 +1,8 @@
 <?php
 
-include_once __DIR__ . '/../config/configDb.php';
+namespace common;
+
+//include_once __DIR__ . '/../config/configDb.php';
 
 /**
  * Class Db - common class to work with Database
@@ -50,7 +52,7 @@ class Db
      * @return PDO
      */
     public function connectToDb(){
-        return $this->_dbh = new PDO($this->_dsn, $this->_user, $this->_password);
+        return $this->_dbh = new \PDO($this->_dsn, $this->_user, $this->_password);
     }
 
     /**

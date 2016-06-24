@@ -1,7 +1,10 @@
 <?php
 
-include_once __DIR__ . '/LoggerAbstract.php';
-include_once __DIR__ . '/../common/Db.php';
+namespace logger\models;
+
+use common\Db;
+use logger\components\LoggerAbstract;
+
 
 /**
  * Class LoggerToDb

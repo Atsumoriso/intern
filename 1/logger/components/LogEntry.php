@@ -1,5 +1,7 @@
 <?php
 
+namespace logger\components;
+
 /**
  * Class LogEntry
  * This class declares constants for Loggers

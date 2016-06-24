@@ -1,5 +1,7 @@
 <?php
 
+namespace logger\components;
+
 /**
  * Interface LoggerInterface
  *
@@ -13,5 +15,4 @@ interface LoggerInterface
     public function error($message);
 
     public function notice($message);
-
 }

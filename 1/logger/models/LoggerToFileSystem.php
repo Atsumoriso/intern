@@ -1,6 +1,8 @@
 <?php
 
-include_once __DIR__ . '/LoggerAbstract.php';
+namespace logger\models;
+
+use logger\components\LoggerAbstract;
 
 class LoggerToFileSystem extends LoggerAbstract
 {
@@ -30,10 +32,10 @@ class LoggerToFileSystem extends LoggerAbstract
      * Gets log File full path
      * @return mixed
      */
-    public function _getLogFilePath(){
-        $config = require __DIR__ . '/../config/config.php';
+    protected function _getLogFilePath(){
+        $config = require __DIR__ . '/../../config/config.php';
 
-        $logFilesDir = DIRECTORY_SEPARATOR . '..' . $config['logFilesDir'];
+        $logFilesDir = DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . $config['logFilesDir'];
         $logFilePath = $config['logFilePath'];
 
         $logFileFullPath = __DIR__ . $logFilesDir . $logFilePath;
