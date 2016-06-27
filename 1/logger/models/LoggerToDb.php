@@ -28,6 +28,14 @@ class LoggerToDb extends LoggerAbstract
     }
 
     /**
+     * Destroys Db connection 
+     */
+    public function __destruct()
+    {
+        unset($this->_dbh);
+    }
+
+    /**
      * Writes log data to Db
      * @param $logMessage
      * @param $logType

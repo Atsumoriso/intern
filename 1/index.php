@@ -28,6 +28,8 @@ if ($config['mode'] == LogEntry::MODE_DEV){
     $loggerToDb->warning('Warning');
     $loggerToDb->notice('This is Notice');
 
+    unset($loggerToDb);
+
 } //if PROD mode, writing error logs only
 elseif ($config['mode'] == LogEntry::MODE_PROD) {
     $loggerToFileSystem->error('Achtung, please! Warning!');
