@@ -7,7 +7,7 @@ namespace logger\components;
  * Abstract class for Loggers
  * Declares abstract method for writing log data to Db
  */
-Abstract class LoggerAbstract implements LoggerInterface
+abstract class LoggerAbstract implements LoggerInterface
 {
     /**
      * Writes warning to Db
