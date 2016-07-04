@@ -1,5 +1,7 @@
 <?php
 
+namespace components;
+
 /**
  * Class Autoloader.
  * Simple autoloader to load classes.

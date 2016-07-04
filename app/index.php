@@ -2,8 +2,9 @@
 //
 use models\User;
 use components\Database;
+use components\Autoloader;
 
-include_once __DIR__ . '/Autoloader.php';
+include_once __DIR__ . '/components/Autoloader.php';
 
 $autoloader = new Autoloader();
 $autoloader->register();
