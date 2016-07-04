@@ -33,6 +33,7 @@ class User extends EntityCommonModelAbstract implements EntityInterface
     protected $lognum;
     protected $reload_acl_flag;
     protected $is_active;
+    
 
     /**
      * @return mixed

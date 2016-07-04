@@ -98,3 +98,9 @@
 2016-06-29 09:32:19 - 2 - Achtung! Warning!
 2016-06-29 09:32:19 - 1 - Achtung! Notice!
 2016-06-29 09:32:19 - 3 - Achtung! Error!
+2016-07-01 17:09:53 - 2 - Achtung! Warning!
+2016-07-01 17:09:53 - 1 - Achtung! Notice!
+2016-07-01 17:09:53 - 3 - Achtung! Error!
+2016-07-01 17:10:01 - 2 - Achtung! Warning!
+2016-07-01 17:10:01 - 1 - Achtung! Notice!
+2016-07-01 17:10:01 - 3 - Achtung! Error!
