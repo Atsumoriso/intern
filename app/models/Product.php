@@ -4,6 +4,7 @@ namespace models;
 
 use modules\ormatsumoriso\EntityCommonModelAbstract;
 use modules\ormatsumoriso\components\EntityInterface;
+use modules\ormatsumoriso\components\BaseMethodInterface;
 
 /**
  * Product Model
@@ -12,7 +13,9 @@ use modules\ormatsumoriso\components\EntityInterface;
  *
  * @package Entity
  */
-class Product extends EntityCommonModelAbstract implements EntityInterface
+class Product extends EntityCommonModelAbstract
+    implements EntityInterface,
+               BaseMethodInterface
 {
     /**
      * @inheritdoc

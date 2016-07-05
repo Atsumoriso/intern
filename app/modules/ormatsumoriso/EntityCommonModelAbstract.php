@@ -3,6 +3,7 @@
 namespace modules\ormatsumoriso;
 
 use modules\ormatsumoriso\components\EntityInterface;
+use modules\ormatsumoriso\components\BaseMethodInterface;
 
 /**
  * Class EntityCommonModelAbstract.
@@ -10,7 +11,9 @@ use modules\ormatsumoriso\components\EntityInterface;
  *
  * @package entity\common
  */
-abstract class EntityCommonModelAbstract implements EntityInterface
+abstract class EntityCommonModelAbstract
+    implements EntityInterface,
+               BaseMethodInterface
 {
     /**
      * Name of the table.
@@ -149,6 +152,29 @@ abstract class EntityCommonModelAbstract implements EntityInterface
         $this->_checkData();
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function findAll()
+    {
+        $query = '
+            SELECT * 
+            FROM '
+            . $this->getTableName() ;
+
+        $stmt = $this->_connection->prepare($query);
+        $stmt->execute();
+        $res = $stmt->fetchAll(\PDO::FETCH_OBJ); //массив объектов
+        return $res;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function findByParam( $param, $value )
+    {
+        // TODO: Implement findByParam() method.
+    }
 
     /**
      * Checks function names (getters and setters), and compares with table columns names. If such property exist,

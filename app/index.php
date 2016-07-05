@@ -73,4 +73,7 @@ var_dump($user6);
 //$product->load(1);
 //var_dump($product);
 
+$user123 = new User($dbConnection);
+$allUsers = $user123->findById(120);
+var_dump($allUsers);
 unset($db);

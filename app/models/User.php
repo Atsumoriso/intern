@@ -4,6 +4,7 @@ namespace models;
 
 use modules\ormatsumoriso\EntityCommonModelAbstract;
 use modules\ormatsumoriso\components\EntityInterface;
+use modules\ormatsumoriso\components\BaseMethodInterface;
 
 /**
  * User Model
@@ -12,7 +13,9 @@ use modules\ormatsumoriso\components\EntityInterface;
  *
  * @package Entity
  */
-class User extends EntityCommonModelAbstract implements EntityInterface
+class User extends EntityCommonModelAbstract
+    implements EntityInterface,
+               BaseMethodInterface
 {
 
     const STATUS_NON_ACTIVE = 0;
