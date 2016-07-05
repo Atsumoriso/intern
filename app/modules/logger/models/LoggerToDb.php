@@ -21,10 +21,9 @@ class LoggerToDb extends LoggerAbstract
      * LoggerToDb constructor.
      * Establishing Db connection
      */
-    public function __construct()
+    public function __construct($dbConnection)
     {
-        $connection = new Database();
-        $this->_dbh = $connection->connectToDb();
+        $this->_dbh = $dbConnection;
     }
 
     /**

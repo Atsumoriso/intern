@@ -33,7 +33,7 @@ class LoggerToFileSystem extends LoggerAbstract
      * @return mixed
      */
     protected function _getLogFilePath(){
-        $config = require __DIR__ . '/../../config/config.php';
+        $config = require __DIR__ . '/../../../config/config.php';
 
         $logFilesDir = DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . $config['logFilesDir'];
         $logFilePath = $config['logFilePath'];

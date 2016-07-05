@@ -30,7 +30,7 @@ class Database
      * Initialazes variables for Db connection and establishes Db connection.
      * @return void
      */
-    public function __construct()
+    private function __construct()
     {
         $this->_dsn =  'mysql:dbname='
             . $this->_getDbConfig()['dbName']
@@ -40,7 +40,6 @@ class Database
         $this->_password = $this->_getDbConfig()['password'];
 
         $this->_connection = new \PDO($this->_dsn, $this->_user, $this->_password);
-
     }
 
 

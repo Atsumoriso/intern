@@ -17,40 +17,60 @@ abstract class EntityCommonModelAbstract implements EntityInterface
 {
     /**
      * Name of the table.
+     *
+     * SHOULD BE SET BY CHILD CLASS.
      * You need to set tableName attribute when creating class for your table.
      *
-     * @var mixed
+     * @var string
      */
-    private $_tableName;
+    protected $_tableName;
 
     /**
-     * Represents an array of Table column values.
+     * 'Id' identifier of the table, for example 'user_id', 'product_id'
+     * Generated automatically when table name is set for the table.
+     *
+     * @var string
+     */
+    protected $_idIdentifier;
+
+    /**
+     * Table column values.
+     * Generated automatically when table name is set for the table.
      *
      * @var array
      */
-    protected $_attributes = [];
+    protected $_tableColumns = [];
+
+    /**
+     * Object Properties
+     *
+     * @var array
+     */
+    protected $_properties = [];
 
     /**
      * Data loaded from Db.
      *
      * @var array
      */
-    protected $_attributesLoaded = [];
+    protected $_propertiesFromSetter = []; //todo now not used FULLY when set some property value
 
     /* Connection to Db */
     protected $_connection;
-
+    
     /**
      * EntityCommonModelAbstract constructor.
-     * If tableName is set when creating Model for Db Table, attributes of this table will automatically initialized.
+     * If tableName is set when creating Model for Db Table, attributes of this table will be automatically initialized.
      *
+     * @param $dbConnection
      * @return void
      */
     public function __construct($dbConnection)
     {
-        $this->_tableName   = $this->getTableName();
         $this->_connection = $dbConnection;
-        $this->_attributes = $this->getAttributes();
+        $this->_tableName   = $this->getTableName();
+        $this->_idIdentifier = $this->getIdIdentifier();
+        $this->_tableColumns = $this->getTableColumns();
     }
 
     /**
@@ -64,12 +84,26 @@ abstract class EntityCommonModelAbstract implements EntityInterface
     }
 
     /**
+     * Gets unique id identifier, the same as primary key
+     * @return mixed
+     */
+    public function getIdIdentifier()
+    {
+        $sql = "SHOW COLUMNS FROM " . $this->getTableName() . " WHERE `key`='pri'";
+        $stmt = $this->_connection->prepare($sql);
+        $stmt->execute();
+        $res  = $stmt->fetch(\PDO::FETCH_COLUMN);
+        return $res;
+    }
+
+
+    /**
      * Represents an array of Table column values.
      * In order to get attributes' values, you need to set value of the tableName.
      *
      * @return array   = names of table columns.
      */
-    public function getAttributes()
+    public function getTableColumns()
     {
         $sql  = 'SHOW FIELDS FROM ' . $this->getTableName();
         $stmt = $this->_connection->prepare($sql);
@@ -79,29 +113,17 @@ abstract class EntityCommonModelAbstract implements EntityInterface
     }
 
     /**
-     * Sets loaded attributes to array.
-     *
-     * @param array $value         list of properties/attributes.
-     */
-    protected function _setAttributesLoaded(Array $value)
-    {
-        $this->_attributesLoaded = $value;
-    }
-
-    /**
      * @inheritdoc
      *
-     * @param int|string $id      @inheritdoc
      */
     public function load($id)
     {
-        $this->_loadNewPropertiesAndValues($id);
+        $this->_properties = $this->_loadDataFromDB($id);
     }
 
     /**
      * @inheritdoc
      *
-     * @return null
      */
     public function getId()
     {
@@ -125,25 +147,57 @@ abstract class EntityCommonModelAbstract implements EntityInterface
         $this->_checkData();
     }
 
-    /**
-     * Gets attributes values as KEYS and property values from Db as VALUES and sets correspondent properties for this object.
-     * First writes loaded data to array, then to Objects properties.
-     *
-     * @param $id              id of loaded data from Db to an Object
-     * @return void
-     */
-    protected function _loadNewPropertiesAndValues($id)
-    {
-        if($this->_loadAttrubitesDataFromDB($id) != null){
-            $this->_setAttributesLoaded($this->_loadAttrubitesDataFromDB($id));
 
-            $propertyFromDbArray = $this->_loadAttrubitesDataFromDB($id);
-            if(!empty($propertyFromDbArray)){
-                foreach ($this->getAttributes() as $attribute) {
-                    $this->_setProperty($attribute,array_shift($propertyFromDbArray));
+    /**
+     * Checks function names (getters and setters), and compares with table columns names. If such property exist,
+     * adds it (setter) or returns (getter).
+     * Substitues usual getters and setters (I hope).
+     *
+     *
+     * @param $getterSetterName
+     * @param $propertyValue
+     * @return mixed
+     */
+    public function __call($getterSetterName, $propertyValue)
+    {
+
+        if(substr($getterSetterName,0,3) == 'set'){
+            $setterName = $this->_processStringValue($getterSetterName);
+
+            //if value is in array of table columns
+            if(in_array($setterName, $this->getTableColumns())){
+                //if property exists, overwrites it, and add to array of properties set by User
+                if(isset($this->_properties[$getterSetterName])){
+                    //$this->_properties[$setterName] = $propertyValue[0];
+                    $this->_propertiesFromSetter[$setterName] = $propertyValue[0]; //todo
+                } else {
+                    //if property does not exist, new key=>value pair added
+                    $this->_properties[$setterName] = $propertyValue[0];
+                    $this->_propertiesFromSetter[$setterName] = $propertyValue[0]; //todo
                 }
             }
+
+        }  elseif(substr($getterSetterName,0,3) == 'get') {
+
+            $getterName = $this->_processStringValue($getterSetterName);
+            if(in_array($getterName, $this->getTableColumns())){
+                return $this->_properties[$getterName];
+            }
         }
+    }
+
+    /**
+     * Deletes first 3 letters (get or set), converts CamelCase to underscore.
+     *
+     * @param $string - 'string' value to change
+     *
+     * @return string - changed value
+     */
+    protected function _processStringValue($string)
+    {
+        $setterName = substr($string,3);
+        //convert CamelCase to underline
+        return ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', $setterName)), '_'); //$0 matched text
     }
 
     /**
@@ -152,15 +206,15 @@ abstract class EntityCommonModelAbstract implements EntityInterface
      * @param $id            'id' of the Db record
      * @return mixed         array of data
      */
-    public function _loadAttrubitesDataFromDB($id)
+    protected function _loadDataFromDB($id)
     {
         $query = '
             SELECT * 
             FROM '
             . $this->getTableName() . '
             WHERE '
-            . $this->getAttributes()[0] . ' = '
-            . $id ;
+            . $this->getIdIdentifier() . ' =  
+            :id ';
 
         $stmt = $this->_connection->prepare($query);
         $stmt->bindParam(":id",$id);
@@ -181,7 +235,8 @@ abstract class EntityCommonModelAbstract implements EntityInterface
         if(empty($this->getId()) || $this->getId() == null){
             $this->_createNewRow();
         } else {
-            $this->_insertDataToDb();
+            $this->_updateRecord();
+            $this->_propertiesFromSetter = [];
         }
     }
 
@@ -193,14 +248,14 @@ abstract class EntityCommonModelAbstract implements EntityInterface
      */
     protected function _createNewRow()
     {
-        $dataSetByUser = $this->_getUserSetData();
+        $dataToInsert = $this->_properties;
         $query = "
             INSERT INTO  `"
             . $this->getTableName() . "` ("
             . implode(
                 ", ",
                 array_keys(
-                    $dataSetByUser
+                    $dataToInsert
                 ))
             . ")  
             VALUES  ("
@@ -208,7 +263,7 @@ abstract class EntityCommonModelAbstract implements EntityInterface
                 ",",
                 array_fill(
                     1,
-                    count($dataSetByUser),
+                    count($dataToInsert),
                     '?'
                 )
             ) . ")";
@@ -216,9 +271,8 @@ abstract class EntityCommonModelAbstract implements EntityInterface
         $stmt = $this->_connection->prepare($query);
 
         $counter = 1;
-        foreach ($dataSetByUser as $value){
-            $stmt->bindValue($counter, $value);
-            $counter++;
+        foreach ($dataToInsert as $value){
+            $stmt->bindValue($counter++, $value);
         }
 
         $stmt->execute();
@@ -226,27 +280,19 @@ abstract class EntityCommonModelAbstract implements EntityInterface
 
     /**
      * Checks if data is set for an object.
-     * First, deleting properties, that come not from table, but from this abstract class and
-     * secondly  deleting null values
+     * Deleting null values
      *
      * @return array   = not null properties/attributes
      */
-    protected function _getUserSetData()
+    private function _getUserSetData()
     {
-        $objProperties = get_object_vars($this);
-
-        foreach ($objProperties as $key=>$value){
-            if(!in_array($key, $this->getAttributes())){
-                unset ($objProperties{$key});
-            }
-        }
-
-        foreach ($objProperties as $key=>$value){
+        $propertiesWithoutId = $this->_properties;
+        foreach ($propertiesWithoutId as $key=>$value){
             if($value == null){
-                unset ($objProperties{$key});
+                unset ($propertiesWithoutId{$key});
             }
         }
-        return $objProperties;
+        return $propertiesWithoutId;
     }
 
     /**
@@ -254,13 +300,13 @@ abstract class EntityCommonModelAbstract implements EntityInterface
      *
      * @return void
      */
-    protected function _insertDataToDb()
+    protected function _updateRecord()
     {
-        $dataSetByUser = $this->_getUserSetData();
-        $idIdentifier = $this->getAttributes()[0]; //todo
-        foreach ($dataSetByUser as $key=>$value){
-            if($key == $idIdentifier){
-                unset($dataSetByUser{$key});
+        $dataToInsert = $this->_propertiesFromSetter;
+        //deleting element 'id'
+        foreach ($dataToInsert as $key=>$value){
+            if($key == $this->getIdIdentifier()){
+                unset($dataToInsert{$key});
             }
         }
 
@@ -269,22 +315,20 @@ abstract class EntityCommonModelAbstract implements EntityInterface
             . $this->getTableName() . "
             SET " ;
         $queryTemp = '';
-        foreach ($dataSetByUser as $key=>$value){
+        foreach ($dataToInsert as $key=>$value){
             $queryTemp .= $key. ' = \'' . $value . "', ";
-
         }
         $query .= substr(trim($queryTemp), 0, -1); //delete last ', '
         $query .=
-            "WHERE "
-            . $idIdentifier . " = "
+            " WHERE "
+            . $this->getIdIdentifier() . " = "
             . $this->getId();
 
         $stmt = $this->_connection->prepare($query);
 
         $counter = 1;
-        foreach ($dataSetByUser as $value){
-            $stmt->bindValue($counter, $value);
-            $counter++;
+        foreach ($dataToInsert as $value){
+            $stmt->bindValue($counter++, $value);
         }
         $stmt->execute();
     }
@@ -293,15 +337,14 @@ abstract class EntityCommonModelAbstract implements EntityInterface
     /**
      * Checks if id exists.
      *
-     * @return null | 'id'        - null or id
+     * @return null | 'id'        - null or id value
      */
     protected function _getPrimaryKey()
     {
-        $id = $this->getAttributes()[0]; //todo may be some other variant??
-        $objProperties = get_object_vars($this);
-        if(!empty($objProperties[$id]) && $objProperties[$id] != null){
-            return $objProperties[$id];
-        } else {
+        $id = $this->getIdIdentifier();
+        if(!empty($this->_properties) && isset($this->_properties[$id]) ){
+            return $this->_properties[$id];
+        }  else {
             return null;
         }
     }
@@ -309,7 +352,7 @@ abstract class EntityCommonModelAbstract implements EntityInterface
 
 
     /**
-     * Calls delete record method, if id is set and unsets Object.
+     * If id is set, calls delete record method and unsets Object.
      *
      * @return void
      */
@@ -319,6 +362,7 @@ abstract class EntityCommonModelAbstract implements EntityInterface
         if(isset($id)){
             $this->_deleteRowQuery($this->getId());
             unset($this);
+            $this->_properties = [];
         }
     }
 
@@ -335,50 +379,46 @@ abstract class EntityCommonModelAbstract implements EntityInterface
             FROM '
             . $this->getTableName() . '
             WHERE '
-            . $this->getAttributes()[0] . ' = '
-            . $id ;
+            . $this->getIdIdentifier() . ' = 
+            :id ' ;
         $stmt = $this->_connection->prepare($query);
         $stmt->bindParam(":id",$id);
         $stmt->execute();
     }
 
+
+    //todo check once again and delete
+
+
     /**
-     * Set property for loaded attributes/properties.
+     * Gets table columns values as KEYS and property values from Db as VALUES and sets correspondent properties for this object.
+     * First writes loaded data to array, then to Objects properties.
      *
-     * @param $property         - name of property
-     * @param $value            - value of property
+     * @param $id              id of loaded data from Db to an Object
+     * @return void
      */
-    protected function _setProperty($property, $value) {
-        $this->$property = $value;
-    }
-
-
-
-//    public function __set($property, $value) {
-//        if(in_array($property, $this->getAttributes())){
-//            $this->property = $value;
-//        }
-//    }
-
-//todo
-//    public function __call($functionName, $arguments)
+//    protected function _loadPropertiesAndValues($id)
 //    {
-//        $testVar = $functionName;
-//        if(substr($testVar,0,3) == 'set'){
-//            $functionName = substr($testVar,3);
-//            $functionName = strtolower($functionName);
-//            if(in_array($functionName, $this->getAttributes())){
-//                foreach ($this->_newAttributes as $key=>$value){
-//                    $key = $functionName;
-//                    $value[0] = $arguments[0];
-//                }
-//                //array_push($this->_newAttributes, $functionName, $arguments[0]);
-//                //$this->_setProperty($functionName, $arguments[0]);
-//                //
-//                //$this->setNewAttributes($arguments);
-//            }
+//        if($this->_loadDataFromDB($id) != null){
+//            $this->_setLoadedProperties($this->_loadDataFromDB($id));
 //        }
-//        //var_dump($this->_newAttributes);
+////            $propertyFromDbArray = $this->_loadDataFromDB($id);
+////            if(!empty($propertyFromDbArray)){
+////                foreach ($this->getTableColumns() as $attribute) {
+////                    $this->_setProperty($attribute,array_shift($propertyFromDbArray));
+////                }
+////            }
+//
+////        if($this->_loadAttrubitesDataFromDB($id) != null){
+////            $this->_setAttributesLoaded($this->_loadAttrubitesDataFromDB($id));
+////
+////            $propertyFromDbArray = $this->_loadAttrubitesDataFromDB($id);
+////            if(!empty($propertyFromDbArray)){
+////                foreach ($this->getTableColumns() as $attribute) {
+////                    $this->_setProperty($attribute,array_shift($propertyFromDbArray));
+////                }
+////            }
+////        }
 //    }
 
 }

@@ -2,6 +2,8 @@
 
 namespace modules\logger;
 
+use modules\logger\components\LoggerInterface;
+
 /**
  * Class LoggerAbstract.
  * Abstract class for Loggers.
