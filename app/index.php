@@ -13,10 +13,10 @@ $autoloader->register();
 $db = Database::getInstance();
 $dbConnection = $db->getDbConnection();
 
-$loggerDb = new LoggerToDb($dbConnection);
-$loggerDb->error('haha');
-$loggerFile = new LoggerToFileSystem();
-$loggerFile->error('Error occured');
+//$loggerDb = new LoggerToDb($dbConnection);
+//$loggerDb->error('haha');
+//$loggerFile = new LoggerToFileSystem();
+//$loggerFile->error('Error occured');
 
 $user = new User($dbConnection);
 $user->load(3);
@@ -47,8 +47,16 @@ $user3->load(32);
 $user3->setApiKey(13);
 $user3->save();
 
-var_dump($user);
-var_dump($user2);
-var_dump($user3);
+//var_dump($user);
+//var_dump($user2);
+//var_dump($user3);
+
+$product = new \models\Product($dbConnection);
+var_dump($product);
+//$product->setName('pants');
+//$product->setCategoryId(2);
+//$product->save();
+$product->load(1);
+var_dump($product);
 
 unset($db);
