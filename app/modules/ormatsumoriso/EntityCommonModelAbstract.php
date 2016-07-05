@@ -46,11 +46,13 @@ abstract class EntityCommonModelAbstract implements EntityInterface
     protected $_properties = [];
 
     /**
-     * Data loaded from Db.
+     * Data received from set methods.
+     * Temporary array, keeps data before save() method calls. When save() method called, data is saved to Db
+     * and to object properties and finally removed from this array
      *
      * @var array
      */
-    protected $_propertiesFromSetter = []; //todo now not used FULLY when set some property value
+    protected $_propertiesFromSetter = [];
 
     /* Connection to Db */
     protected $_connection;
@@ -69,6 +71,7 @@ abstract class EntityCommonModelAbstract implements EntityInterface
         $this->_idIdentifier = $this->getIdIdentifier();
         $this->_tableColumns = $this->getTableColumns();
     }
+
 
     /**
      * Gets name of the table, to which this Class belongs to.
@@ -114,18 +117,19 @@ abstract class EntityCommonModelAbstract implements EntityInterface
      * @inheritdoc
      *
      */
-    public function load($id)
+    public function load($id = null)
     {
-        $this->_properties = $this->_loadDataFromDB($id);
+        if($id != null && $this->_loadDataFromDB($id) != false){
+            $this->_properties = $this->_loadDataFromDB($id);
+        }
     }
 
     /**
      * @inheritdoc
-     *
      */
     public function getId()
     {
-        return $this->_getPrimaryKey();
+       return $this->_getPrimaryKey();
     }
 
     /**
@@ -161,23 +165,19 @@ abstract class EntityCommonModelAbstract implements EntityInterface
         if(substr($getterSetterName,0,3) == 'set'){
             $setterName = $this->_processStringValue($getterSetterName);
 
-            //if value is in array of table columns
-            if(in_array($setterName, $this->getTableColumns())){
-                //if property exists, overwrites it, and add to array of properties set by User
-                if(isset($this->_properties[$getterSetterName])){
-                    //$this->_properties[$setterName] = $propertyValue[0];
-                    $this->_propertiesFromSetter[$setterName] = $propertyValue[0]; //todo
-                } else {
-                    //if property does not exist, new key=>value pair added
-                    $this->_properties[$setterName] = $propertyValue[0];
-                    $this->_propertiesFromSetter[$setterName] = $propertyValue[0]; //todo
-                }
+            // if value is in array of table columns and not equal to Id indentifier
+            // adds to propertiesFromSetter array
+            if(in_array($setterName, $this->getTableColumns()) 
+                && $setterName != $this->getIdIdentifier()){
+
+                $this->_propertiesFromSetter[$setterName] = $propertyValue[0];
             }
 
         }  elseif(substr($getterSetterName,0,3) == 'get') {
 
             $getterName = $this->_processStringValue($getterSetterName);
-            if(in_array($getterName, $this->getTableColumns())){
+            if(in_array($getterName, $this->getTableColumns())
+                && isset($this->_properties[$getterName])){
                 return $this->_properties[$getterName];
             }
         }
@@ -209,8 +209,8 @@ abstract class EntityCommonModelAbstract implements EntityInterface
             FROM '
             . $this->getTableName() . '
             WHERE '
-            . $this->getIdIdentifier() . ' =  
-            :id ';
+            . $this->getIdIdentifier() . " =  
+            :id ";
 
         $stmt = $this->_connection->prepare($query);
         $stmt->bindParam(":id",$id);
@@ -230,8 +230,15 @@ abstract class EntityCommonModelAbstract implements EntityInterface
     {
         if(empty($this->getId()) || $this->getId() == null){
             $this->_createNewRecord();
+            //get last inserted id and add to properties
+            $this->_properties[$this->getIdIdentifier()] = $this->_connection->lastInsertId();
+            // add new properies (from set methods)
+            $this->_properties = array_replace($this->_properties, $this->_propertiesFromSetter);
+            // unset properties From Setters array
+            $this->_propertiesFromSetter = [];
         } else {
             $this->_updateRecord();
+            $this->_properties = array_replace($this->_properties, $this->_propertiesFromSetter);
             $this->_propertiesFromSetter = [];
         }
     }
@@ -244,7 +251,7 @@ abstract class EntityCommonModelAbstract implements EntityInterface
      */
     protected function _createNewRecord()
     {
-        $dataToInsert = $this->_properties;
+        $dataToInsert = $this->_propertiesFromSetter;
         $query = "
             INSERT INTO  `"
             . $this->getTableName() . "` ("
@@ -258,7 +265,7 @@ abstract class EntityCommonModelAbstract implements EntityInterface
             . implode(
                 ",",
                 array_fill(
-                    1,
+                    1, //start index
                     count($dataToInsert),
                     '?'
                 )
@@ -274,22 +281,6 @@ abstract class EntityCommonModelAbstract implements EntityInterface
         $stmt->execute();
     }
 
-    /**
-     * Checks if data is set for an object.
-     * Deleting null values
-     *
-     * @return array   = not null properties/attributes
-     */
-    private function _getUserSetData()
-    {
-        $propertiesWithoutId = $this->_properties;
-        foreach ($propertiesWithoutId as $key=>$value){
-            if($value == null){
-                unset ($propertiesWithoutId{$key});
-            }
-        }
-        return $propertiesWithoutId;
-    }
 
     /**
      * Updates existing record in the Database.
@@ -299,24 +290,19 @@ abstract class EntityCommonModelAbstract implements EntityInterface
     protected function _updateRecord()
     {
         $dataToInsert = $this->_propertiesFromSetter;
-        //deleting element 'id'
-        foreach ($dataToInsert as $key=>$value){
-            if($key == $this->getIdIdentifier()){
-                unset($dataToInsert{$key});
-            }
-        }
-
         $query = "
             UPDATE "
             . $this->getTableName() . "
-            SET " ;
-        $queryTemp = '';
-        foreach ($dataToInsert as $key=>$value){
-            $queryTemp .= $key. ' = \'' . $value . "', ";
-        }
-        $query .= substr(trim($queryTemp), 0, -1); //delete last ', '
-        $query .=
-            " WHERE "
+            SET "
+            . implode(
+                ", ", 
+                array_map(function ($key) {
+                        return $key . " = ? ";
+                    },
+                    array_keys($dataToInsert)
+                )
+            ) . "
+             WHERE "
             . $this->getIdIdentifier() . " = "
             . $this->getId();
 
@@ -338,9 +324,8 @@ abstract class EntityCommonModelAbstract implements EntityInterface
     {
         $id = $this->getIdIdentifier();
         if(!empty($this->_properties) && isset($this->_properties[$id]) ){
-            return $this->_properties[$id];
-        }  else {
-            return null;
+            $a = $this->_properties[$id];
+            return $a;
         }
     }
 
@@ -354,8 +339,9 @@ abstract class EntityCommonModelAbstract implements EntityInterface
         $id = $this->getId();
         if(isset($id)){
             $this->_deleteRowQuery($this->getId());
-            unset($this);
+            //unset($this);
             $this->_properties = [];
+            $this->_connection = null;
         }
     }
 
