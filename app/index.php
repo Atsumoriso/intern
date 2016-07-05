@@ -3,6 +3,7 @@
 use models\User;
 use components\Database;
 use modules\logger\models\LoggerToDb;
+use modules\logger\models\LoggerToFileSystem;
 
 include_once __DIR__ . '/Autoloader.php';
 
@@ -12,12 +13,14 @@ $autoloader->register();
 $db = Database::getInstance();
 $dbConnection = $db->getDbConnection();
 
-//$loggerDb = new LoggerToDb($dbConnection);
-//$loggerDb->error('haha');
+$loggerDb = new LoggerToDb($dbConnection);
+$loggerDb->error('haha');
+$loggerFile = new LoggerToFileSystem();
+$loggerFile->error('Error occured');
 
 $user = new User($dbConnection);
-$user->load(44);
-$user->delete(); //deleting record
+$user->load(3);
+//$user->delete(); //deleting record
 
 
 echo $user->getId();
@@ -43,3 +46,9 @@ $user3 = new User($dbConnection);
 $user3->load(32);
 $user3->setApiKey(13);
 $user3->save();
+
+var_dump($user);
+var_dump($user2);
+var_dump($user3);
+
+unset($db);

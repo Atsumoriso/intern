@@ -3,6 +3,7 @@
 namespace modules\logger;
 
 use modules\logger\components\LoggerInterface;
+use modules\logger\components\LogEntry;
 
 /**
  * Class LoggerAbstract.

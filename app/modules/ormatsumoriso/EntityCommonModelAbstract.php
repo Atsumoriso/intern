@@ -4,12 +4,9 @@ namespace modules\ormatsumoriso;
 
 use modules\ormatsumoriso\components\EntityInterface;
 
-use components\Database;
-
 /**
  * Class EntityCommonModelAbstract.
- *
- * Abstract class to work with models - DB Entities
+ * Abstract class to work with models - DB Entities.
  *
  * @package entity\common
  */
@@ -74,7 +71,7 @@ abstract class EntityCommonModelAbstract implements EntityInterface
     }
 
     /**
-     * Gets name of the table, to which this Class belongs to
+     * Gets name of the table, to which this Class belongs to.
      *
      * @return mixed
      */
@@ -84,7 +81,8 @@ abstract class EntityCommonModelAbstract implements EntityInterface
     }
 
     /**
-     * Gets unique id identifier, the same as primary key
+     * Gets unique id identifier, the same as primary key.
+     *
      * @return mixed
      */
     public function getIdIdentifier()
@@ -153,7 +151,6 @@ abstract class EntityCommonModelAbstract implements EntityInterface
      * adds it (setter) or returns (getter).
      * Substitues usual getters and setters (I hope).
      *
-     *
      * @param $getterSetterName
      * @param $propertyValue
      * @return mixed
@@ -190,7 +187,6 @@ abstract class EntityCommonModelAbstract implements EntityInterface
      * Deletes first 3 letters (get or set), converts CamelCase to underscore.
      *
      * @param $string - 'string' value to change
-     *
      * @return string - changed value
      */
     protected function _processStringValue($string)
@@ -233,7 +229,7 @@ abstract class EntityCommonModelAbstract implements EntityInterface
     protected function _checkData()
     {
         if(empty($this->getId()) || $this->getId() == null){
-            $this->_createNewRow();
+            $this->_createNewRecord();
         } else {
             $this->_updateRecord();
             $this->_propertiesFromSetter = [];
@@ -246,7 +242,7 @@ abstract class EntityCommonModelAbstract implements EntityInterface
      *
      * @return void
      */
-    protected function _createNewRow()
+    protected function _createNewRecord()
     {
         $dataToInsert = $this->_properties;
         $query = "
@@ -333,7 +329,6 @@ abstract class EntityCommonModelAbstract implements EntityInterface
         $stmt->execute();
     }
 
-
     /**
      * Checks if id exists.
      *
@@ -348,8 +343,6 @@ abstract class EntityCommonModelAbstract implements EntityInterface
             return null;
         }
     }
-
-
 
     /**
      * If id is set, calls delete record method and unsets Object.
@@ -385,40 +378,5 @@ abstract class EntityCommonModelAbstract implements EntityInterface
         $stmt->bindParam(":id",$id);
         $stmt->execute();
     }
-
-
-    //todo check once again and delete
-
-
-    /**
-     * Gets table columns values as KEYS and property values from Db as VALUES and sets correspondent properties for this object.
-     * First writes loaded data to array, then to Objects properties.
-     *
-     * @param $id              id of loaded data from Db to an Object
-     * @return void
-     */
-//    protected function _loadPropertiesAndValues($id)
-//    {
-//        if($this->_loadDataFromDB($id) != null){
-//            $this->_setLoadedProperties($this->_loadDataFromDB($id));
-//        }
-////            $propertyFromDbArray = $this->_loadDataFromDB($id);
-////            if(!empty($propertyFromDbArray)){
-////                foreach ($this->getTableColumns() as $attribute) {
-////                    $this->_setProperty($attribute,array_shift($propertyFromDbArray));
-////                }
-////            }
-//
-////        if($this->_loadAttrubitesDataFromDB($id) != null){
-////            $this->_setAttributesLoaded($this->_loadAttrubitesDataFromDB($id));
-////
-////            $propertyFromDbArray = $this->_loadAttrubitesDataFromDB($id);
-////            if(!empty($propertyFromDbArray)){
-////                foreach ($this->getTableColumns() as $attribute) {
-////                    $this->_setProperty($attribute,array_shift($propertyFromDbArray));
-////                }
-////            }
-////        }
-//    }
 
 }

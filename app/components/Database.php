@@ -1,8 +1,6 @@
 <?php
 
-
 namespace components;
-
 
 /**
  * Class Db - common class to work with Database.
@@ -22,6 +20,7 @@ class Database
     /* PDO connection to Db */
     private $_connection;
 
+    /* Instance of the class */
     private static $_instance;
 
     /**
@@ -42,7 +41,6 @@ class Database
         $this->_connection = new \PDO($this->_dsn, $this->_user, $this->_password);
     }
 
-
     /**
      * Gets an instance of Database - \PDO Object, if instance is null
      *
@@ -55,7 +53,6 @@ class Database
         }
         return self::$_instance;
     }
-
 
     /**
      * Establishes connection with Database.
@@ -71,7 +68,7 @@ class Database
      * @return mixed
      */
     private function _getDbConfig(){
-        return $configDb = require __DIR__ . '/../../app/config/configDb.php';
+        return $configDb = require __DIR__ . '/../../app/config/db.php';
     }
 
     private function _clone()
@@ -82,8 +79,4 @@ class Database
     {
         throw \Exception("Action is not allowed");
     }
-
-
-
-
 }

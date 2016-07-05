@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Class Autoloader.
  * Simple autoloader to load classes.
