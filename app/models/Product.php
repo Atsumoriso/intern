@@ -6,9 +6,9 @@ use modules\ormatsumoriso\EntityCommonModelAbstract;
 use modules\ormatsumoriso\components\EntityInterface;
 
 /**
- * User Model
+ * Product Model
  *
- * Class to work with table api_user
+ * Class to work with table product
  *
  * @package Entity
  */
