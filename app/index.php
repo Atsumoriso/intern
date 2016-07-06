@@ -2,10 +2,11 @@
 
 use models\User;
 use components\Database;
+use components\Autoloader;
 use modules\logger\models\LoggerToDb;
 use modules\logger\models\LoggerToFileSystem;
 
-include_once __DIR__ . '/Autoloader.php';
+include_once __DIR__ . '/components/Autoloader.php';
 
 $autoloader = new Autoloader();
 $autoloader->register();
