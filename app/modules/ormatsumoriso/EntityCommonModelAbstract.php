@@ -18,9 +18,6 @@ abstract class EntityCommonModelAbstract
     /**
      * Name of the table.
      *
-     * SHOULD BE SET BY CHILD CLASS.
-     * You need to set tableName attribute when creating class for your table.
-     *
      * @var string
      */
     protected $_tableName;
@@ -78,6 +75,8 @@ abstract class EntityCommonModelAbstract
 
     /**
      * Gets name of the table, to which this Class belongs to.
+     * SHOULD BE SET BY CHILD CLASS.
+     * You need to set tableName attribute when creating class for your table.
      *
      * @return mixed
      */
@@ -87,7 +86,7 @@ abstract class EntityCommonModelAbstract
     }
 
     /**
-     * Gets unique id identifier, the same as primary key.
+     * Gets unique 'id' identifier, i.e. primary key.
      *
      * @return mixed
      */
