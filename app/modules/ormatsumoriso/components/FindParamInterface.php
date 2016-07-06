@@ -3,17 +3,10 @@
 namespace modules\ormatsumoriso\components;
 
 
-interface BaseMethodInterface
+interface FindParamInterface
 {
     /**
-     * Get all records
-     *
-     * @return mixed
-     */
-    public function findAll();
-
-    /**
-     * Get record by parameter and value
+     * Gets record by parameter and value
      *
      * @param $param
      * @param $value

@@ -4,7 +4,7 @@ namespace models;
 
 use modules\ormatsumoriso\EntityCommonModelAbstract;
 use modules\ormatsumoriso\components\EntityInterface;
-use modules\ormatsumoriso\components\BaseMethodInterface;
+use modules\ormatsumoriso\components\FindAllInterface;
 
 /**
  * User Model
@@ -15,7 +15,7 @@ use modules\ormatsumoriso\components\BaseMethodInterface;
  */
 class User extends EntityCommonModelAbstract
     implements EntityInterface,
-               BaseMethodInterface
+               FindAllInterface
 {
 
     const STATUS_NON_ACTIVE = 0;

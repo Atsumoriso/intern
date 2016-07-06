@@ -3,7 +3,7 @@
 namespace modules\ormatsumoriso;
 
 use modules\ormatsumoriso\components\EntityInterface;
-use modules\ormatsumoriso\components\BaseMethodInterface;
+use modules\ormatsumoriso\components\FindAllInterface;
 
 /**
  * Class EntityCommonModelAbstract.
@@ -13,7 +13,7 @@ use modules\ormatsumoriso\components\BaseMethodInterface;
  */
 abstract class EntityCommonModelAbstract
     implements EntityInterface,
-               BaseMethodInterface
+               FindAllInterface
 {
     /**
      * Name of the table.
@@ -165,14 +165,6 @@ abstract class EntityCommonModelAbstract
         $stmt->execute();
         $res = $stmt->fetchAll(\PDO::FETCH_OBJ); //массив объектов
         return $res;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function findByParam( $param, $value )
-    {
-        // TODO: Implement findByParam() method.
     }
 
     /**
