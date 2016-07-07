@@ -3,7 +3,6 @@
 namespace modules\ormatsumoriso;
 
 use modules\ormatsumoriso\components\EntityInterface;
-use modules\ormatsumoriso\components\FindAllInterface;
 
 /**
  * Class EntityCommonModelAbstract.
@@ -12,8 +11,7 @@ use modules\ormatsumoriso\components\FindAllInterface;
  * @package entity\common
  */
 abstract class EntityCommonModelAbstract
-    implements EntityInterface,
-               FindAllInterface
+    implements EntityInterface
 {
     /**
      * Name of the table.
