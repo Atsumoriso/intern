@@ -11,8 +11,8 @@ include_once __DIR__ . '/components/Autoloader.php';
 $autoloader = new Autoloader();
 $autoloader->register();
 
-$db = Database::getInstance();
-$dbConnection = $db->getDbConnection();
+//$db = Database::getInstance();
+$dbConnection = Database::getInstance()->getDbConnection();
 
 //$loggerDb = new LoggerToDb($dbConnection);
 //$loggerDb->error('haha');
@@ -74,7 +74,4 @@ var_dump($user6);
 //$product->load(1);
 //var_dump($product);
 
-$user123 = new User($dbConnection);
-$allUsers = $user123->findById(120);
-var_dump($allUsers);
 unset($db);

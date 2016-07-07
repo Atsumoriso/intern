@@ -152,22 +152,6 @@ abstract class EntityCommonModelAbstract
     }
 
     /**
-     * @inheritdoc
-     */
-    public function findAll()
-    {
-        $query = '
-            SELECT * 
-            FROM '
-            . $this->getTableName() ;
-
-        $stmt = $this->_connection->prepare($query);
-        $stmt->execute();
-        $res = $stmt->fetchAll(\PDO::FETCH_OBJ); //массив объектов
-        return $res;
-    }
-
-    /**
      * Checks function names (getters and setters), and compares with table columns names. If such property exist,
      * adds it (setter) or returns (getter).
      * Substitues usual getters and setters (I hope).
