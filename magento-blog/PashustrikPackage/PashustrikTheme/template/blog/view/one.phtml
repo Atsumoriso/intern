@@ -2,10 +2,6 @@
 $currentCustomerId= Mage::getSingleton('customer/session')->getCustomer()->getId();
 $post = $this->viewOnePost();
 
-
-var_dump((string)$this->getOnePost($params));
-
-
 ?>
 
 <?php if(isset($post->post_id)) :?>
