@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Atsumoriso_Blog>
+            <version>1.0.0</version>
+        </Atsumoriso_Blog>
+    </modules>
+    <global>
+        <blocks>
+            <blog>
+                <class>Atsumoriso_Blog_Block</class>
+            </blog>
+        </blocks>
+        <models>
+            <blog>
+                <class>Atsumoriso_Blog_Model</class>
+                <resourceModel>blog_resource</resourceModel>
+            </blog>
+            <blog_resource>
+                <class>Atsumoriso_Blog_Model_Resource</class>
+                <entities>
+                    <post>
+                        <table>blog_post</table>
+                    </post>
+                </entities>
+            </blog_resource>
+       </models>
+
+        <helpers>
+            <class>Astumoriso_Blog_Helper</class>
+        </helpers>
+
+        <resources>
+            <atsumoriso_blog_setup> <!--folder name to read from-->
+                <setup>
+                    <module>Atsumoriso_Blog</module>
+                </setup>
+            </atsumoriso_blog_setup>
+        </resources>
+
+    </global>
+    <frontend>
+        <routers>
+            <blog>
+                <use>standard</use>
+                <args>
+                    <module>Atsumoriso_Blog</module>
+                    <frontName>blog</frontName>
+                </args>
+            </blog>
+        </routers>
+        <layout>
+            <updates>
+                <atsumoriso_blog>
+                    <file>blog.xml</file>
+                </atsumoriso_blog>
+            </updates>
+        </layout>
+    </frontend>
+</config>

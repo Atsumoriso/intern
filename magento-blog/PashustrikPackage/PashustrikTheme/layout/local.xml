@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default translate="label" module="page">
+        <reference name="root">
+            <reference name="head">
+
+                <!-- Remove the rwd parent's styles.css file -->
+                <action method="removeItem"><type>skin_css</type><name>css/styles.css</name></action>
+                <action method="removeItem"><type>skin_css</type><name>css/madisonisland.css</name></action>
+
+                <!--&lt;!&ndash;&lt;!&ndash; Add it again before your css/mdev.css file &ndash;&gt;&ndash;&gt;-->
+                <action method="addItem"><type>skin_css</type><name>css/styles.css</name></action>
+                <action method="addItem"><type>skin_css</type><name>css/madisonisland.css</name></action>
+
+                <!-- Loading local css file just after parent's styles.css -->
+                <action method="addItem"><type>skin_css</type><name>css/dev.css</name></action>
+
+            </reference>
+        </reference>
+
+    </default>
+
+    <!--<blog_post_view> //todo можно тут указать либо в отдельном xml, который тогда подключать через xml update-->
+        <!--<reference name="content">-->
+            <!--<block type="blog/posts" name="blog_view_one" template="blog/view/one.phtml"/>-->
+        <!--</reference>-->
+    <!--</blog_post_view>-->
+
+
+
+</layout>

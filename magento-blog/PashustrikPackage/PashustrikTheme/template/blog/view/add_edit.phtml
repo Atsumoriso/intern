@@ -1,0 +1,69 @@
+<?php
+$post = $this->viewOnePost();
+
+
+
+if(isset($post->post_id)){
+    $currentCustomerId= Mage::getSingleton('customer/session')->getCustomer()->getId();
+    if($currentCustomerId != $post->author_id){
+        Mage::app()->getFrontController()->getResponse()->setRedirect(Atsumoriso_Blog_Model_Post::POSTS_LIST_URL);
+    }
+    $action = Mage::getBaseUrl('web') . 'blog/post/edit/id/' . $post->post_id;
+} else {
+    $action = Mage::getBaseUrl('web') . 'blog/post/add';
+}
+
+?>
+
+<?php if(isset($post->post_id)): ?>
+    <h1> Edit post #<?=$post->post_id?></h1>
+<?php else: ?>
+    <h1> Add new post</h1>
+<?php endif;?>
+
+
+<p><i>Hint: html tags are supported in <b>content</b> field only!</i></p>
+
+<div>
+    <form id="add-edit-post-form" action="<?=$action?>" method="post" enctype='multipart/form-data'>
+
+        <label for="headline"><?=isset($post->post_id)? 'Edit title' : 'Add title'?></label>
+        <p><textarea rows="3" cols="170" id="headline" class="input-text required-entry validate-length  maximum-length-150 minimum-length-3 validate-no-html-tags" name="title" title="Edit title"><?=isset($post->headline) ? $post->headline : ''?></textarea></p>
+
+        <label for="text"><?=isset($post->post_id)? 'Edit post content' : 'Add content'?></label>
+        <p><textarea rows="20" cols="170" id="text" class="input-text required-entry validate-length-content" name="text" title="Edit post"><?= isset($post->text) ? $post->text : ''?></textarea></p>
+
+        <?php if($post->photo_path != null):?>
+            Previously added photo:
+            <div>
+                <img src="<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>/media/uploads/<?=$post->photo_path?>"  width="500" title="<?=$post->headline?>">
+            </div>
+
+            <label for="attachment">Add new photo (previous photo will deleted)</label>
+        <?php else:?>
+            <label for="attachment">Add photo</label>
+            <p>You may upload files jpg, jpeg, png.</p>
+        <?php endif;?>
+
+        <div class="input-box">
+            <input name="MAX_FILE_SIZE" type="hidden" value="2000000" />
+            <input name="attachment" id="attachment" class="input-text" type="file" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Save changes</button>
+    </form>
+</div>
+
+
+
+<!--Custom validation rules-->
+<script type="text/javascript">
+    var editPostForm = new VarienForm('add-edit-post-form', true);
+
+    Validation.add('validate-length-content','Hey, you should try hard to get for at least 200 characters!',function(the_field_value){
+        if(the_field_value.length >300) {
+            return true;
+        }
+        return false;
+    });
+</script>

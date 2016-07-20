@@ -1,0 +1,78 @@
+<?php
+$posts = $this->viewAllPosts();
+?>
+
+<div>
+    <p>
+        <?php if(Mage::getSingleton('customer/session')->isLoggedIn()): ?>
+            <h4><a href="add/">ADD NEW POST</a></h4>
+        <?php else: ?>
+            <h4>Log in to add new post -- <a href="<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>customer/account/login/" title="Log In" >LOG IN</a></h4>
+        <?php endif; ?>
+    </p>
+
+    <?php if(empty($posts)): ?>
+        <h3>No posts in the blog yet. </h3>
+     <?php else: ?>
+    <div class="sort-by" style="padding-bottom: 10px">
+        <label><?php echo $this->__('Sort By') ?></label>
+
+
+        <?php //checking GET to keep sorting choice
+        if (isset($_GET['sort']) && isset($_GET['direction'])){
+            $sort      = $_GET['sort'];
+            $direction = $_GET['direction'];
+        } else {
+            $sort      = 'date';
+            $direction = 'desc';
+        }
+
+        ?>
+        <!-- Form for sorting products -->
+        <div>
+            <form method="GET" action="<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).Atsumoriso_Blog_Model_Post::POSTS_LIST_URL?>">
+                <p><select name="sort">
+
+                        <option value="author"<?php if(isset($sort) && $sort === "author") echo "selected";?>>Author</option>
+                        <option value="date"<?php if(isset($sort) && $sort === "date") echo "selected";?>>Date</option>
+
+                    </select>
+                    <select name="direction">
+                        <option value="asc"<?php if(isset($direction) && $direction == "asc") echo "selected";?>>ascending</option>
+                        <option value="desc"<?php if(isset($direction) && $direction == "desc") echo "selected";?>>descending</option>
+                    </select>
+                    <input type="submit" value="Sort!"></p>
+            </form>
+        </div>
+
+    </div>
+
+    <?php endif;?>
+
+    <?php foreach ($posts as $post):?>
+
+    <h1><a href="view/id/<?=$post['post_id']?>"><?=$post['headline']?></a></h1>
+
+
+        <?php if($post['photo_path'] != null):?>
+            <div >
+                <img src="<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>/media/uploads/<?=$post['photo_path']?>"  width="100" title="<?=$post['headline']?>">
+            </div>
+        <?php endif;?>
+
+        <p><?=Mage::helper('core/string')->truncate($post['text'], 100)?>
+            <a href="view/id/<?=$post['post_id']?>">Read more</a>
+        </p>
+
+        <p>Author: <b><?=$post['fullname'] ?> </b> , Added at: <b><?=$post['created_at']?></b>
+            <?php $customerData = Mage::getSingleton('customer/session')->getCustomer();
+
+
+                if(Mage::getSingleton('customer/session')->isLoggedIn() && $customerData->getId() == $post['author_id']): ?>
+                    <b><a href="<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>blog/post/edit/id/<?=$post['post_id']?>">Edit</a></b>
+            <?php endif; ?>
+        </p>
+        <br><br><br>
+
+    <?php endforeach;?>
+</div>
