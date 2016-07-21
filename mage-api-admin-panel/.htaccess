@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+    # включаем mod_rewrite
+    RewriteEngine On
+
+    ErrorDocument 404 /404.php
+    #
+    RewriteCond %{REQUEST_URI} !index\.php$
+
+    # условие, что все существующие файлы не будут обрабатываться регулярным выражением
+    RewriteCond %{REQUEST_FILENAME} !-f
+
+    #Все попытки попасть на `/index' или `index.html' будут перенаправлены на URL `/'.
+
+    # регулярное выражение — при любой строке запроса будет открывать index.php,
+    # добавляя её (строку запроса) в $_SERVER['REQUEST_URI'].
+    RewriteRule .* index.php [L,QSA]
+
+</IfModule>
+
+# To remove the /index.php/ part from all URLs, add two lines after the RewriteEngine statement:
+# RewriteCond %{REQUEST_URI} ^/index\.php/
+# RewriteRule ^index.php/(.*) /$1 [R,L]
