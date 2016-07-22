@@ -204,7 +204,6 @@ class DashboardController
             $currentPage  = 1;
         }
 
-
         $products = $product->findAllAndSortByParam($sort, $direction, $currentPage, $offset);
 
         $productsCount = $product->findAllAndCount();
