@@ -1,5 +1,5 @@
 <?php
-use core\View;
+use components\Paginator;
 ?>
 <div id="page-wrapper">
 
@@ -21,26 +21,7 @@ use core\View;
                     </li>
                 </ol>
 
-                <?php if(isset($paginator) && $paginator->pagesQuantity > 1): ?>
-
-                    <ul class="pagination pagination-lg">
-                        <?php for ($i = 1; $i<=$paginator->pagesQuantity; $i++): ?>
-
-                        <li <?php if(isset($paginator->currentPage) && $paginator->currentPage == $i) echo 'class="active"'?>>
-                            <a href="
-                                <?=SITE_URL?>/dashboard/list?sort=<?=$sort?>&direction=<?=$direction?>&page=<?=$i?>
-                                "><?=$i?>
-                            </a>
-                        </li>
-                        <?php endfor;?>
-                    </ul>
-
-                <div>
-                    <p>Всего <?= $paginator->count?> наименований товара на <?=$paginator->pagesQuantity?> страницах.</p>
-                </div>
-
-
-                <?php endif;?>
+                <?php $paginator->run($sort, $direction); ?>
 
 
                 <div>

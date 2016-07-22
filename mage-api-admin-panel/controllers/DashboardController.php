@@ -157,6 +157,11 @@ class DashboardController
                     }
                 }
                 $_SESSION['imported_successfully'] = Validate::$message['imported_successfully'];
+                //deleting cookie if had been set previously
+                setcookie('sort', '', time() - 100000,'/');
+                setcookie('direction', '', time() - 100000,'/');
+                setcookie('page', '', time() - 100000,'/');
+
                 header('Location:'. SITE_URL . '/dashboard/list');
             }
         } catch (OAuthException $e) {
@@ -177,7 +182,7 @@ class DashboardController
     {
         $product = new Product($this->_connection);
 
-        //checking GET to keep sorting choice
+        //checking GET or COOKIE to keep sorting choice
         if (isset($_GET['sort']) && isset($_GET['direction'])) {
             $sort = $_GET['sort'];
             $direction = $_GET['direction'];
@@ -193,8 +198,8 @@ class DashboardController
             $direction = 'desc';
         }
 
+
         //check current page #
-        $offset = Paginator::ITEMS_PER_PAGE; //number of items to display at one page
         if (isset($_GET['page'])) {
             $currentPage = $_GET['page'];
             setcookie("page", $currentPage, time() + 36000, "/");
@@ -204,22 +209,21 @@ class DashboardController
             $currentPage  = 1;
         }
 
-        $products = $product->findAllAndSortByParam($sort, $direction, $currentPage, $offset);
-
+        //get paginator
         $productsCount = $product->findAllAndCount();
-        $paginator = new Paginator((int)$productsCount['count'], $offset);
-        $paginator->currentPage = $currentPage;
+        $paginator = new Paginator((int)$productsCount['count']); //optional second parameter - number of pages, 10 by default
+        $paginator->setCurrentPage($currentPage);
+
+        //get products with sorting options
+        $products = $product->findAllAndSortByParam($sort, $direction, $currentPage, $paginator->getItemsPerPage());
 
         $this->view->render('dashboard/list', [
             'products'         => $products,
             'sort'             => $sort,
             'direction'        => $direction,
             'paginator'        => $paginator,
-//            'message'         => Validate::$message['edited_successfully'],
             ]);
     }
-
-
 
     
 }
