@@ -26,7 +26,7 @@ use core\View;
                     <ul class="pagination pagination-lg">
                         <?php for ($i = 1; $i<=$paginator->pagesQuantity; $i++): ?>
 
-                        <li <?php if(isset($currentPage) && $currentPage == $i) echo 'class="active"'?>>
+                        <li <?php if(isset($paginator->currentPage) && $paginator->currentPage == $i) echo 'class="active"'?>>
                             <a href="
                                 <?=SITE_URL?>/dashboard/list?sort=<?=$sort?>&direction=<?=$direction?>&page=<?=$i?>
                                 "><?=$i?>

@@ -42,6 +42,7 @@ class DashboardController
             $description = $_POST['description'];
             $price = $_POST['price'];
             $status = $_POST['status'];
+
             $name = Validate::cleanInput($name);
             $sku = Validate::cleanInput($sku);
             $description = Validate::cleanInput($description);
@@ -64,9 +65,6 @@ class DashboardController
 
             } elseif (Validate::validateMaxLength($sku, 255) === false) {
                 View::$errorMessage = Validate::$message['max_lengh_255_sku'];
-
-//            } elseif (!is_numeric($price) && ){
-//                View::$errorMessage = Validate::$message['digits_only'];
 
             } elseif(Validate::validatePrice($price) === false){
                 View::$errorMessage = Validate::$message['price_is_float'];
@@ -180,34 +178,44 @@ class DashboardController
         $product = new Product($this->_connection);
 
         //checking GET to keep sorting choice
-        if (isset($_GET['sort']) && isset($_GET['direction'])){
-            $sort      = $_GET['sort'];
+        if (isset($_GET['sort']) && isset($_GET['direction'])) {
+            $sort = $_GET['sort'];
             $direction = $_GET['direction'];
 
+            setcookie("sort", $sort, time() + 36000, "/");
+            setcookie("direction", $direction, time() + 36000, "/");
+
+        } elseif (isset($_COOKIE['sort']) && isset($_COOKIE['direction'])) {
+            $sort = $_COOKIE['sort'];
+            $direction = $_COOKIE['direction'];
         } else {
-            $sort      = 'price';
+            $sort = 'price';
             $direction = 'desc';
         }
 
         //check current page #
         $offset = Paginator::ITEMS_PER_PAGE; //number of items to display at one page
-        if(isset($_GET['page'])){
-            $currentPage  = $_GET['page'];
+        if (isset($_GET['page'])) {
+            $currentPage = $_GET['page'];
+            setcookie("page", $currentPage, time() + 36000, "/");
+        } elseif (isset($_COOKIE['page'])) {
+            $currentPage  = $_COOKIE['page'];
         } else {
             $currentPage  = 1;
         }
+
+
         $products = $product->findAllAndSortByParam($sort, $direction, $currentPage, $offset);
 
         $productsCount = $product->findAllAndCount();
         $paginator = new Paginator((int)$productsCount['count'], $offset);
+        $paginator->currentPage = $currentPage;
 
         $this->view->render('dashboard/list', [
             'products'         => $products,
             'sort'             => $sort,
             'direction'        => $direction,
-            'currentPage'      => $currentPage,
             'paginator'        => $paginator,
-            'productsCount'    => $productsCount,
 //            'message'         => Validate::$message['edited_successfully'],
             ]);
     }

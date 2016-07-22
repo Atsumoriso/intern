@@ -16,6 +16,8 @@ class Paginator
 
     public $pagesQuantity;
 
+    public $currentPage;
+
     const ITEMS_PER_PAGE = 10;
 
     public function __construct($count,$itemsPerPage)
