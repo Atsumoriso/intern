@@ -65,8 +65,13 @@ class AdminController
     {
         $post = $_POST['logout'];
         if(!empty($post) && $post == 'logout' ){
+            setcookie('sort', '', time() - 100000,'/');
+            setcookie('direction', '', time() - 100000,'/');
+            setcookie('page', '', time() - 100000,'/');
+
             session_unset();
             session_destroy();
+
             session_start();
             $_SESSION['logged_out'] = Validate::$message['logged_out'];
             header('Location:' . SITE_URL . '/admin' );
