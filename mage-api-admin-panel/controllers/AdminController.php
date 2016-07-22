@@ -2,9 +2,10 @@
 
 namespace controllers;
 
-use models\User;
 use core\View;
-use core\Validate;
+use components\Database;
+use components\Validate;
+use models\User;
 
 class AdminController
 {
@@ -15,6 +16,7 @@ class AdminController
     public function __construct()
     {
         session_start();
+        $this->_connection = Database::getInstance()->getDbConnection();
         $this->view = new View();
     }
 
@@ -29,29 +31,27 @@ class AdminController
             $password = Validate::cleanInput($password);
 
             if(empty($email) || empty($password)){
-                View::$errorMessage = View::$message['all_fields_required'];
+                View::$errorMessage = Validate::$message['all_fields_required'];
 
             } elseif (!empty($email) && Validate::validateEmail($email) == false){
-                View::$errorMessage = View::$message['email_not_valid'];
+                View::$errorMessage = Validate::$message['email_not_valid'];
 
             } elseif (!empty($password) && Validate::validateMinLength($password, 6) == false){
-                View::$errorMessage = View::$message['password_is_short'];
+                View::$errorMessage = Validate::$message['password_is_short'];
                 
             } elseif (!empty($user->checkUserEmail($email))){
                 $userData = $user->checkUserEmail($email);
                 $passwordHash = md5($password);
                 if($passwordHash != $userData['password_hash']){
-                    View::$errorMessage = View::$message['email_pass_are_not_correct'];
+                    View::$errorMessage = Validate::$message['email_pass_are_not_correct'];
                 } else {
                     $_SESSION['authorized'] = 1;
                     $_SESSION['user_email'] = $userData['email'];
                     $_SESSION['user_name'] = $userData['lastname']. " " .$userData['firstname'];
 
-//                    header('Location:' . SITE_URL . '/dashboard');
-                    View::$successMessage = View::$message['signed_in'];
-                    $this->view->render('dashboard/index', [
-                        'message' => View::$successMessage,
-                    ]);
+                    $_SESSION['signed_in'] = Validate::$message['signed_in'];
+                    header('Location:' . SITE_URL . '/dashboard');
+
                 }
             }
             $this->view->renderAdminPage('admin/index');
@@ -67,6 +67,8 @@ class AdminController
         if(!empty($post) && $post == 'logout' ){
             session_unset();
             session_destroy();
+            session_start();
+            $_SESSION['logged_out'] = Validate::$message['logged_out'];
             header('Location:' . SITE_URL . '/admin' );
         }
         header('Location:' . SITE_URL . '/dashboard' );

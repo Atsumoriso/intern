@@ -22,29 +22,22 @@ use core\View;
                         <i class="fa fa-file"></i>
                     </li>
                 </ol>
-
-                <?php if(isset(View::$successMessage)):?>
+                <?php if(isset($_SESSION['signed_in'])):?>
                     <div class="alert alert-success">
-                        <strong> <?= View::$successMessage?> </strong>
+                        <strong> <?=$_SESSION['signed_in']?> </strong>
+                        <?php unset($_SESSION['signed_in']);?>
                     </div>
                 <?php endif;?>
 
 
-                <?php if(isset($message)):?>
-                <div class="alert alert-success">
-                    <strong> <?=$message?> </strong>
-                </div>
-                <?php endif;?>
 
                 <div>
                     <h4>To start - please try to click menu items on the left panel.</h4>
                 </div>
 
+
             </div>
-        </div>
-        <!-- /.row -->
 
-    </div>
-    <!-- /.container-fluid -->
-
-</div>
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div><!-- /.page-wrapper -->

@@ -1,3 +1,6 @@
+<?php
+use core\View;
+?>
 <div id="page-wrapper">
 
     <div class="container-fluid">
@@ -20,18 +23,22 @@
 
                 <?php if(isset($paginator) && $paginator->pagesQuantity > 1): ?>
 
-                <div class="btn-toolbar">
-                    <div class="btn-group" style="margin-bottom: 20px;">
-
+                    <ul class="pagination pagination-lg">
                         <?php for ($i = 1; $i<=$paginator->pagesQuantity; $i++): ?>
-                            <a href="<?=SITE_URL?>/dashboard/list?sort=<?=$sort?>&direction=<?=$direction?>&page=<?=$i?>" >
-                                <button class="btn"  <?php if(isset($currentPage) && $currentPage == $i) echo 'style="border: 2px solid red"'?>><?=$i?>
-                                </button>
-                            </a>
-                        <?php endfor;?>
 
-                    </div>
+                        <li <?php if(isset($currentPage) && $currentPage == $i) echo 'class="active"'?>>
+                            <a href="
+                                <?=SITE_URL?>/dashboard/list?sort=<?=$sort?>&direction=<?=$direction?>&page=<?=$i?>
+                                "><?=$i?>
+                            </a>
+                        </li>
+                        <?php endfor;?>
+                    </ul>
+
+                <div>
+                    <p>Всего <?= $paginator->count?> наименований товара на <?=$paginator->pagesQuantity?> страницах.</p>
                 </div>
+
 
                 <?php endif;?>
 
@@ -54,12 +61,20 @@
                         </form>
                     </div>
 
-
-                    <?php if(isset($message)):?>
+                    <?php if(isset($_SESSION['edited_successfully'])):?>
                         <div class="alert alert-success">
-                            <strong> <?=$message?> </strong>
+                            <strong> <?=$_SESSION['edited_successfully']?> </strong>
+                            <?php unset($_SESSION['edited_successfully']);?>
                         </div>
                     <?php endif;?>
+
+                    <?php if(isset($_SESSION['imported_successfully'])):?>
+                        <div class="alert alert-success">
+                            <strong> <?=$_SESSION['imported_successfully']?> </strong>
+                            <?php unset($_SESSION['imported_successfully'])?>
+                        </div>
+                    <?php endif;?>
+
 
 
                     <?php if(isset($products)): ?>
@@ -80,6 +95,9 @@
                                         <th>
                                             Price
                                         </th>
+                                        <th>
+                                            Photo
+                                        </th>
                                     </tr>
 
                                 <?php foreach ($products as $product): ?>
@@ -99,7 +117,10 @@
                                             <?=$product->id?>
                                         </td>
                                         <td>
-                                            <b><?=$product->price?> </b>
+                                            <b><?=number_format($product->price, '2','.', ' ')?> </b>
+                                        </td>
+                                        <td>
+                                                <img src="<?=$product->image_url?>"  width="100" title="<?=$product->name?>">
                                         </td>
 
                                     </tr>
@@ -118,11 +139,8 @@
 
             </div>
 
-            </div>
-        </div>
-        <!-- /.row -->
+         </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div><!-- /.page-wrapper -->
 
-    </div>
-    <!-- /.container-fluid -->
-</div>
 

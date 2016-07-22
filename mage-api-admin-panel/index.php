@@ -1,6 +1,7 @@
 <?php
 
 use core\Autoloader;
+use core\Router;
 
 include_once __DIR__ . '/core/Autoloader.php';
 
@@ -11,7 +12,7 @@ define('SITE_URL',$configMain['local_site']);
 $autoloader = new Autoloader();
 $autoloader->register();
 
-$router = new \core\Router();
+$router = new Router();
 $router->run();
 
 

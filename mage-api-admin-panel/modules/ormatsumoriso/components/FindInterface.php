@@ -3,7 +3,7 @@
 namespace modules\ormatsumoriso\components;
 
 
-interface FindAllInterface
+interface FindInterface
 {
         /**
          * Gets number of records

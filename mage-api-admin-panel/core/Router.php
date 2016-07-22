@@ -31,11 +31,10 @@ class Router
         $uri = $this->getURI();
 
         $parts = $this->parseUrl($uri);
-        $classNamePath = $this->getClassNamePath($parts);
+       // $classNamePath = $this->getClassNamePath($parts);
 
         $className = $this->getClassName($parts);
         $controllerPath = '\\controllers\\' . $className;
-
 
         $methodName = $this->getMethodName($parts);
         $paramName = $this->getParamName($parts);
@@ -66,15 +65,15 @@ class Router
 
     }
 
-    public function getClassNamePath($uri)
-    {
-        if (!empty($uri[0])){
-            return  '\\controllers\\'. ucfirst(strtolower($uri[0])) . 'Controller.php';
-        } else {
-            return '\\controllers\\AdminController.php';
-        }
-
-    }
+//    public function getClassNamePath($uri)
+//    {
+//        if (!empty($uri[0])){
+//            return  '\\controllers\\'. ucfirst(strtolower($uri[0])) . 'Controller.php';
+//        } else {
+//            return '\\controllers\\AdminController.php';
+//        }
+//
+//    }
 
     public function getMethodName($uri)
     {

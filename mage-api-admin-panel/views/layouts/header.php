@@ -15,7 +15,7 @@ if ($_SESSION['authorized'] != 1) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin - Bootstrap Admin Template</title>
+    <title>Products Management panel</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="/../assets/css/bootstrap.min.css" rel="stylesheet">

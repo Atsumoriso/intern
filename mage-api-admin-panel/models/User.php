@@ -4,16 +4,17 @@ namespace models;
 
 use modules\ormatsumoriso\EntityCommonModelAbstract;
 use modules\ormatsumoriso\components\EntityInterface;
+use modules\ormatsumoriso\components\FindInterface;
 
 /**
  * User Model
- * 
  * Class to work with table api_user
  *
  * @package Entity
  */
 class User extends EntityCommonModelAbstract
-    implements EntityInterface
+    implements EntityInterface,
+               FindInterface
 {
 
     const STATUS_NON_ACTIVE = 0;
@@ -28,6 +29,11 @@ class User extends EntityCommonModelAbstract
     }
 
 
+    /**
+     * Checks if record with this email exists, and returns this record or null.
+     * @param $email
+     * @return null
+     */
     public function checkUserEmail($email)
     {
         if(!empty($this->_getEmailFromDb($email))){
@@ -37,12 +43,11 @@ class User extends EntityCommonModelAbstract
         return null;
     }
 
-    public function getConnection()
-    {
-        return $this->_connection;
-    }
-
-
+    /**
+     * Gets record from Db using email.
+     * @param $email
+     * @return mixed
+     */
     private function _getEmailFromDb($email)
     {
         $query = '
@@ -52,7 +57,7 @@ class User extends EntityCommonModelAbstract
             WHERE `email` =  
             :email ';
 
-        $stmt = $this->getConnection()->prepare($query);
+        $stmt = $this->_connection->prepare($query);
         $stmt->bindParam(":email",$email);
         $stmt->execute();
         $res = $stmt->fetch(\PDO::FETCH_ASSOC);

@@ -1,12 +1,12 @@
 <?php
 
-namespace core;
+namespace components;
 
 /**
  * Class Paginator.
  * Class for creating pagination for big lists of data.
  *
- * @package core
+ * @package components
  */
 class Paginator
 {

@@ -166,7 +166,7 @@
         </div>
         <!-- /.navbar-collapse -->
     </nav>
-    <a class="navbar-brand" href="http://test1.local/dashboard">Dashboard</a>
+    <a class="navbar-brand" href="http://test1.local/dashboard">Products Management panel</a>
 
 
     <!-- /#page-wrapper -->

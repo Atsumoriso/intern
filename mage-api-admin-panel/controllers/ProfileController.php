@@ -6,7 +6,6 @@ use core\View;
 
 class ProfileController
 {
-    
     public $view;
 
     public function __construct()

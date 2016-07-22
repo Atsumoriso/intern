@@ -4,17 +4,17 @@ namespace models;
 
 use modules\ormatsumoriso\EntityCommonModelAbstract;
 use modules\ormatsumoriso\components\EntityInterface;
-use components\Database;
+use modules\ormatsumoriso\components\FindInterface;
 
 /**
  * Product Model
- *
  * Class to work with table product.
  *
  * @package Entity
  */
 class Product extends EntityCommonModelAbstract
-    implements EntityInterface
+    implements EntityInterface,
+               FindInterface
 {
 
     const STATUS_NOT_ACTIVE = 0;

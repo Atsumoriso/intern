@@ -5,6 +5,7 @@ namespace components;
 /**
  * Class Db - common class to work with Database.
  *
+ * @package components
  */
 class Database
 {

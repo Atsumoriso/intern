@@ -2,12 +2,11 @@
 
 namespace controllers;
 
-use models\Product;
-use components\Database;
-use models\User;
 use core\View;
-use core\Paginator;
-use core\Validate;
+use components\Database;
+use components\Validate;
+use components\Paginator;
+use models\Product;
 
 class DashboardController
 {
@@ -35,39 +34,42 @@ class DashboardController
         $product = new Product($this->_connection);
         $product->load($productId);
 
-        if(!empty($_POST)){
+        if(!empty($_POST)) {
             $productId = Validate::cleanInput($_GET['id']);
 
-            $name          = $_POST['name'];
-            $sku           = $_POST['sku'];
-            $description   = $_POST['description'];
-            $price         = $_POST['price'];
-            $status        = $_POST['status'];
-            $name          = Validate::cleanInput($name);
-            $sku           = Validate::cleanInput($sku);
-            $description   = Validate::cleanInput($description);
-            $price         = abs(Validate::cleanInput($price));
-            if($status == 0) {
+            $name = $_POST['name'];
+            $sku = $_POST['sku'];
+            $description = $_POST['description'];
+            $price = $_POST['price'];
+            $status = $_POST['status'];
+            $name = Validate::cleanInput($name);
+            $sku = Validate::cleanInput($sku);
+            $description = Validate::cleanInput($description);
+            $price = abs(Validate::cleanInput($price));
+            if ($status == 0) {
                 $status = 0;
             } else {
                 $status = 1;
             }
 
 
-            if(empty($name) || empty($sku) || empty($description)) {
-                View::$errorMessage = View::$message['all_fields_required'];
+            if (empty($name) || empty($sku) || empty($description)) {
+                View::$errorMessage = Validate::$message['all_fields_required'];
 
-            } elseif(Validate::validateMaxLength($name, 65535) === false) { //todo this 65000 is strange!
-                View::$errorMessage = View::$message['max_lengh_65535_name'];
+            } elseif (Validate::validateMaxLength($name, 65535) === false) { //todo this 65000 is strange!
+                View::$errorMessage = Validate::$message['max_lengh_65535_name'];
 
-            } elseif(Validate::validateMaxLength($description, 65535) === false) { //todo this 65000 is strange!
-                View::$errorMessage = View::$message['max_lengh_65535_name'];
+            } elseif (Validate::validateMaxLength($description, 65535) === false) { //todo this 65000 is strange!
+                View::$errorMessage = Validate::$message['max_lengh_65535_name'];
 
-            } elseif(Validate::validateMaxLength($sku, 255) === false) {
-                View::$errorMessage = View::$message['max_lengh_255_sku'];
+            } elseif (Validate::validateMaxLength($sku, 255) === false) {
+                View::$errorMessage = Validate::$message['max_lengh_255_sku'];
+
+//            } elseif (!is_numeric($price) && ){
+//                View::$errorMessage = Validate::$message['digits_only'];
 
             } elseif(Validate::validatePrice($price) === false){
-                View::$errorMessage = View::$message['price_is_float'];
+                View::$errorMessage = Validate::$message['price_is_float'];
             }
 
             if(isset(View::$errorMessage)){
@@ -84,14 +86,15 @@ class DashboardController
                 $product = new Product($this->_connection);
                 $product->load($productId);
                 $product->setName($name);
-//            $product->setSku(); //todo why is it allowed to change SKU?
+//            $product->setSku(); //todo - do we really need to change SKU?
                 $product->setStatus($status);
                 $product->setDescription($description);
                 $product->setPrice($price);
                 $product->save();
+
+                $_SESSION['edited_successfully'] = Validate::$message['edited_successfully'];
                 header('Location:'. SITE_URL . '/dashboard/list');
             }
-
         }
         $this->view->render('dashboard/edit',[
             'product' => $product,
@@ -155,6 +158,7 @@ class DashboardController
                         $product->saveData($oneProduct);
                     }
                 }
+                $_SESSION['imported_successfully'] = Validate::$message['imported_successfully'];
                 header('Location:'. SITE_URL . '/dashboard/list');
             }
         } catch (OAuthException $e) {
@@ -197,7 +201,6 @@ class DashboardController
         $productsCount = $product->findAllAndCount();
         $paginator = new Paginator((int)$productsCount['count'], $offset);
 
-
         $this->view->render('dashboard/list', [
             'products'         => $products,
             'sort'             => $sort,
@@ -205,6 +208,7 @@ class DashboardController
             'currentPage'      => $currentPage,
             'paginator'        => $paginator,
             'productsCount'    => $productsCount,
+//            'message'         => Validate::$message['edited_successfully'],
             ]);
     }
 
