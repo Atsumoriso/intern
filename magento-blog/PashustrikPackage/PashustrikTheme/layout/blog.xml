@@ -48,22 +48,4 @@
         </reference>
     </blog_post_edit>
 
-    <blog_index_admin>
-        <reference name="root">
-            <action method="setTemplate"><template>page/2columns-right.phtml</template></action><!--template for columns number-->
-        </reference>
-        <reference name="content">
-            <block type="blog/posts" name="blog_admin" template="blog/admin/index.phtml"/>
-        </reference>
-    </blog_index_admin>
-
-    <blog_index_adminview>
-        <reference name="root">
-            <action method="setTemplate"><template>page/2columns-right.phtml</template></action><!--template for columns number-->
-        </reference>
-        <reference name="content">
-            <block type="blog/admin" name="blog_bibded_product" template="blog/admin/bindedproduct.phtml"/>
-        </reference>
-    </blog_index_adminview>
-
 </layout>
