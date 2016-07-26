@@ -46,4 +46,10 @@ $table = $installer->getConnection()
 
 $installer->getConnection()->createTable($table);
 
+$installer->getConnection()->addForeignKey(
+    $installer->getFkName('blog/post', 'author_id', 'customer/entity', 'entity_id'),
+    $installer->getTable('blog/post'), 'author_id',
+    $installer->getTable('customer/entity'), 'entity_id'
+);
+
 $installer->endSetup();

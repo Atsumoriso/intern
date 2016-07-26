@@ -2,8 +2,14 @@
 <layout version="0.1.0">
 
     <blog_post_view>
+        <reference name="root">
+            <action method="setTemplate"><template>page/3columns.phtml</template></action><!--template for columns number-->
+        </reference>
         <reference name="content">
             <block type="blog/posts" name="blog_view_one" template="blog/view/one.phtml"/>
+        </reference>
+        <reference name="left">
+            <block type="blog/posts" name="blog_view_post_and_product" template="blog/sidebar/binded_product.phtml"/>
         </reference>
     </blog_post_view>
 
@@ -41,5 +47,23 @@
             <block type="blog/posts" name="blog_add" template="blog/view/add_edit.phtml"/>
         </reference>
     </blog_post_edit>
+
+    <blog_index_admin>
+        <reference name="root">
+            <action method="setTemplate"><template>page/2columns-right.phtml</template></action><!--template for columns number-->
+        </reference>
+        <reference name="content">
+            <block type="blog/posts" name="blog_admin" template="blog/admin/index.phtml"/>
+        </reference>
+    </blog_index_admin>
+
+    <blog_index_adminview>
+        <reference name="root">
+            <action method="setTemplate"><template>page/2columns-right.phtml</template></action><!--template for columns number-->
+        </reference>
+        <reference name="content">
+            <block type="blog/admin" name="blog_bibded_product" template="blog/admin/bindedproduct.phtml"/>
+        </reference>
+    </blog_index_adminview>
 
 </layout>

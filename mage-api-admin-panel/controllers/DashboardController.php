@@ -36,6 +36,14 @@ class DashboardController
 
         if(!empty($_POST)) {
             $productId = Validate::cleanInput($_GET['id']);
+//            $checkId = new Product($this->_connection);
+//            $checkId->load($productId);
+//
+//            if(empty($checkId->checkByIdIfRecordExists($productId))) {
+//                $_SESSION['product_not_exists'] = Validate::$message['product_not_exists'];
+//                header('Location:'. SITE_URL . '/dashboard/list');
+//                exit;
+//            }
 
             $name = $_POST['name'];
             $sku = $_POST['sku'];
@@ -149,8 +157,8 @@ class DashboardController
 
                 foreach ($objArray as $oneProduct){
                     $product = new Product($this->_connection);
-                    if(!empty($product->checkIfRecordExists($oneProduct->sku))){
-                        $currentProductId = $product->checkIfRecordExists($oneProduct->sku)['id'];
+                    if(!empty($product->checkBySkuIfRecordExists($oneProduct->sku))){
+                        $currentProductId = $product->checkBySkuIfRecordExists($oneProduct->sku)['id'];
                         $product->updateData($oneProduct, $currentProductId);
                     } else {
                         $product->saveData($oneProduct);

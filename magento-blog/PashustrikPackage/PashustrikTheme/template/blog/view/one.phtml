@@ -1,34 +1,34 @@
 <?php
 $currentCustomerId= Mage::getSingleton('customer/session')->getCustomer()->getId();
 $post = $this->viewOnePost();
-
 ?>
 
-<?php if(isset($post->post_id)) :?>
-<div>
+<?php if(isset($post)) :?>
+        <div>
 
-    <h1><?=$post->headline?></h1>
+            <h1><?=$post->getHeadline()?></h1>
 
-    <?php if($post->photo_path != null):?>
-        <div >
-            <img src="<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>/media/uploads/<?=$post->photo_path?>"  width="500" title="<?=$post->headline?>">
+            <?php if($post->getPhotoPath() != null):?>
+                <div>
+                    <img src="<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>/media/uploads/<?=$post->getPhotoPath()?>" width="500" title="<?=$post->getHeadline()?>">
+                </div>
+            <?php endif;?>
+
+            <p><?=$post->getText()?></p>
+            <p>Author: <b><?=$post->getFullname() ?> </b> , Added at: <b><?=$post->getCreatedAt(); //date_format($post->created_at, 'Y-m-d H:i:s') ?></b></p>
+            <p>
+                <?php if(Mage::getSingleton('customer/session')->isLoggedIn() && $currentCustomerId == $post->getAuthorId()): ?>
+
+                    <b><a href="<?=Mage::getBaseUrl('web')?>blog/post/edit/id/<?=$post->getPostId()?>">Edit</a></b>
+
+                    <form action="<?=Mage::getBaseUrl('web')?>blog/post/delete/id/<?=$post->getPostId()?>" method="post">
+                        <input type="hidden" name="delete" value="<?=$post->getPostId()?>">
+                        <input type="submit" value="delete">
+                    </form>
+
+                <?php endif; ?>
+            </p>
         </div>
-    <?php endif;?>
-
-    <p><?=$post->text;?></p>
-    <p>Author: <b><?=$post->author_id ?> </b> , Added at: <b><?=$post->created_at; //date_format($post->created_at, 'Y-m-d H:i:s') ?></b></p>
-    <p>
-        <?php if(Mage::getSingleton('customer/session')->isLoggedIn() && $currentCustomerId == $post->author_id): ?>
-
-            <b><a href="<?=Mage::getBaseUrl('web')?>blog/post/edit/id/<?=$post->post_id?>">Edit</a></b>
-
-            <form action="<?=Mage::getBaseUrl('web')?>blog/post/delete/id/<?=$post->post_id?>" method="post">
-                <input type="hidden" name="delete" value="<?=$post->post_id?>">
-                <input type="submit" value="delete">
-            </form>
-
-        <?php endif; ?>
-    </p>
-</div>
 
 <?php endif;?>
+

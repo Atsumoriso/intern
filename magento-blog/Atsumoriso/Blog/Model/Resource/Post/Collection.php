@@ -4,6 +4,6 @@ class Atsumoriso_Blog_Model_Resource_Post_Collection extends Mage_Core_Model_Res
 {
     protected function _construct()
     {
-        $this->_init('blog/post');
+        $this->_init('blog/post', 'post_id');
     }
 }

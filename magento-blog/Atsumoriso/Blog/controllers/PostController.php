@@ -2,6 +2,7 @@
 
 class Atsumoriso_Blog_PostController extends Mage_Core_Controller_Front_Action
 {
+
     /**
      * Displays one record.
      *
@@ -47,7 +48,9 @@ class Atsumoriso_Blog_PostController extends Mage_Core_Controller_Front_Action
         $post = $this->getRequest()->getPost();
         if(!empty($post)){
             //validate and save photo
-            $fileName = $this->validateAndSavePhoto();
+            $model = new Atsumoriso_Blog_Model_Post();
+
+            $fileName = $model->validateAndSavePhoto();
             $blogpost = $this->getCurrentBlogPost();
 
             $blogpost->setHeadline($post['title']);
@@ -75,7 +78,8 @@ class Atsumoriso_Blog_PostController extends Mage_Core_Controller_Front_Action
 
         $post = $this->getRequest()->getPost();
         if(!empty($post)){
-            $fileName = $this->validateAndSavePhoto();
+            $model = new Atsumoriso_Blog_Model_Post();
+            $fileName = $model->validateAndSavePhoto();
             $blogpost = Mage::getModel('blog/post');
             $blogpost->setHeadline($post['title']);
             if($fileName != ''){
@@ -110,8 +114,11 @@ class Atsumoriso_Blog_PostController extends Mage_Core_Controller_Front_Action
     }
 
 
+
+
+
     /**
-     *  Returnes id parameter from GET query.
+     *  Returns id parameter from GET query.
      *
      * @return mixed
      */
@@ -134,32 +141,4 @@ class Atsumoriso_Blog_PostController extends Mage_Core_Controller_Front_Action
         return $blogpost;
     }
 
-    public function validateAndSavePhoto()
-    {
-        $fileName = '';
-        if (isset($_FILES['attachment']['name']) && $_FILES['attachment']['name'] != '') {
-            try {
-                $fileName = $_FILES['attachment']['name'];
-                $fileExt = strtolower(substr(strrchr($fileName, "."), 1));
-                $fileNamewoe = rtrim($fileName, $fileExt);
-                $fileName = preg_replace('/\s+', '', $fileNamewoe) . time() . '.' . $fileExt;
-
-                $uploader = new Varien_File_Uploader('attachment');
-                $uploader->setAllowedExtensions(array('jpg', 'png', 'jpeg')); //add more file types you want to allow
-                $uploader->setAllowRenameFiles(false);
-                $uploader->setFilesDispersion(false);
-                $path = Mage::getBaseDir('media') . '/uploads';
-                if (!is_dir($path)) {
-                    mkdir($path, 0777, true);
-                }
-                $uploader->save($path . DS, $fileName);
-
-                return $fileName;
-
-            } catch (Exception $e) {
-                Mage::getSingleton('customer/session')->addError($e->getMessage());
-                $error = true;
-            }
-        }
-    }
 }

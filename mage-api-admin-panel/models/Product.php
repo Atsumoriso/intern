@@ -142,7 +142,7 @@ class Product extends EntityCommonModelAbstract
      * @param $sku
      * @return mixed
      */
-    public function checkIfRecordExists($sku)
+    public function checkBySkuIfRecordExists($sku)
     {
             $query = "
             SELECT * 
@@ -156,6 +156,21 @@ class Product extends EntityCommonModelAbstract
         $res = $stmt->fetch();
         return $res;
 
+    }
+
+    public function checkByIdIfRecordExists($id)
+    {
+        $query = "
+            SELECT * 
+            FROM "
+            . $this->getTableName() . "
+            WHERE `id` = :id";
+
+        $stmt = $this->_connection->prepare($query);
+        $stmt->bindParam(":id",$id);
+        $stmt->execute();
+        $res = $stmt->fetch();
+        return $res;
     }
 
 

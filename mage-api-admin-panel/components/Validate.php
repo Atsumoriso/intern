@@ -29,6 +29,7 @@ class Validate
         'digits_only'                       => 'Only digits allowed.',
         'edited_successfully'               => 'Product has been edited successfully!',
         'imported_successfully'             => 'Products have been imported successfully!',
+        'product_not_exists'                 => 'No product with such ID!',
     ];
 
 

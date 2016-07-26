@@ -22,6 +22,9 @@
                     <post>
                         <table>blog_post</table>
                     </post>
+                    <productbinded>
+                        <table>blog_post_product_binded</table>
+                    </productbinded>
                 </entities>
             </blog_resource>
        </models>

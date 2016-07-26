@@ -2,21 +2,20 @@
 $post = $this->viewOnePost();
 
 
-
-if(isset($post->post_id)){
+if(!empty($post->getPostId())){
     $currentCustomerId= Mage::getSingleton('customer/session')->getCustomer()->getId();
-    if($currentCustomerId != $post->author_id){
+    if($currentCustomerId != $post->getAuthorId()){
         Mage::app()->getFrontController()->getResponse()->setRedirect(Atsumoriso_Blog_Model_Post::POSTS_LIST_URL);
     }
-    $action = Mage::getBaseUrl('web') . 'blog/post/edit/id/' . $post->post_id;
+    $action = Mage::getBaseUrl('web') . 'blog/post/edit/id/' . $post->getPostId();
 } else {
     $action = Mage::getBaseUrl('web') . 'blog/post/add';
 }
 
 ?>
 
-<?php if(isset($post->post_id)): ?>
-    <h1> Edit post #<?=$post->post_id?></h1>
+<?php if(!empty($post->getPostId())): ?>
+    <h1> Edit post #<?=$post->getPostId()?></h1>
 <?php else: ?>
     <h1> Add new post</h1>
 <?php endif;?>
@@ -27,16 +26,16 @@ if(isset($post->post_id)){
 <div>
     <form id="add-edit-post-form" action="<?=$action?>" method="post" enctype='multipart/form-data'>
 
-        <label for="headline"><?=isset($post->post_id)? 'Edit title' : 'Add title'?></label>
-        <p><textarea rows="3" cols="170" id="headline" class="input-text required-entry validate-length  maximum-length-150 minimum-length-3 validate-no-html-tags" name="title" title="Edit title"><?=isset($post->headline) ? $post->headline : ''?></textarea></p>
+        <label for="headline"><?=!empty($post->getPostId())? 'Edit title' : 'Add title'?></label>
+        <p><textarea rows="3" cols="170" id="headline" class="input-text required-entry validate-length  maximum-length-150 minimum-length-3 validate-no-html-tags" name="title" title="Edit title"><?=!empty($post->getHeadline()) ? $post->getHeadline() : ''?></textarea></p>
 
-        <label for="text"><?=isset($post->post_id)? 'Edit post content' : 'Add content'?></label>
-        <p><textarea rows="20" cols="170" id="text" class="input-text required-entry validate-length-content" name="text" title="Edit post"><?= isset($post->text) ? $post->text : ''?></textarea></p>
+        <label for="text"><?=!empty($post->getPostId())? 'Edit post content' : 'Add content'?></label>
+        <p><textarea rows="20" cols="170" id="text" class="input-text required-entry validate-length-content" name="text" title="Edit post"><?= !empty($post->getText()) ? $post->text : ''?></textarea></p>
 
-        <?php if($post->photo_path != null):?>
+        <?php if($post->getPhotoPath() != null):?>
             Previously added photo:
             <div>
-                <img src="<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>/media/uploads/<?=$post->photo_path?>"  width="500" title="<?=$post->headline?>">
+                <img src="<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>/media/uploads/<?=$post->getPhotoPath()?>"  width="500" title="<?=$post->getHeadline()?>">
             </div>
 
             <label for="attachment">Add new photo (previous photo will deleted)</label>

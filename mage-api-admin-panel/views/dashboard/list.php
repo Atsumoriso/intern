@@ -49,6 +49,13 @@ use components\Paginator;
                         </div>
                     <?php endif;?>
 
+                    <?php if(isset($_SESSION['product_not_exists'])):?>
+                        <div class="alert alert-success">
+                            <strong> <?=$_SESSION['product_not_exists']?> </strong>
+                            <?php unset($_SESSION['product_not_exists']);?>
+                        </div>
+                    <?php endif;?>
+
                     <?php if(isset($_SESSION['imported_successfully'])):?>
                         <div class="alert alert-success">
                             <strong> <?=$_SESSION['imported_successfully']?> </strong>
