@@ -2,22 +2,35 @@
 
 class Atsumoriso_Blog_Model_Post extends Mage_Core_Model_Abstract
 {
+    const STATUS_POST_ACTIVE        = 1;
+    const STATUS_POST_NOT_ACTIVE    = 2;
+
     /**
      * Url to list of all posts.
      */
     const POSTS_LIST_URL = '/blog/post/list';
     /**
-     * Url for photo folder (used for deleting files).
+     * Url for uploads folder
      */
-    const BLOG_PHOTO_FOLDER_URL = MAGENTO_ROOT . '/media/uploads/';
-    /**
-     * Web url for photo folder.
-     */
-    const BLOG_PHOTO_FOLDER_WEB_URL = '';
+    const UPLOADS_FOLDER_URL = 'uploads/';
+
 
     protected function _construct()
     {
         $this->_init('blog/post');
+    }
+
+    /**
+     * Retrieve statuses array
+     *
+     * @return array
+     */
+    public static function getStatusesArray()
+    {
+        return array(
+            self::STATUS_POST_ACTIVE      => Mage::helper('atsumoriso_blog')->__('Active'),
+            self::STATUS_POST_NOT_ACTIVE  => Mage::helper('atsumoriso_blog')->__('Not active')
+        );
     }
 
     /**
@@ -45,14 +58,15 @@ class Atsumoriso_Blog_Model_Post extends Mage_Core_Model_Abstract
         return $coll->getData();
     }
 
+
     /**
      * Gets single post data.
-     * @param $post
-     * @return stdClass
+     * @param $id
+     * @return Mage_Core_Model_Abstract
      */
-    public function getSinglePostData($params)
+    public function getSinglePostData($id)
     {
-        $post = Mage::getModel('blog/post')->load($params['id']);
+        $post = Mage::getModel('blog/post')->load($id);
         return $post;
     }
 
@@ -72,16 +86,16 @@ class Atsumoriso_Blog_Model_Post extends Mage_Core_Model_Abstract
                 $fileName = preg_replace('/\s+', '', $fileNamewoe) . time() . '.' . $fileExt;
 
                 $uploader = new Varien_File_Uploader('attachment');
-                $uploader->setAllowedExtensions(array('jpg', 'png', 'jpeg')); //add more file types you want to allow
+                $uploader->setAllowedExtensions(array('jpg', 'png', 'jpeg'));
                 $uploader->setAllowRenameFiles(false);
                 $uploader->setFilesDispersion(false);
-                $path = Mage::getBaseDir('media') . '/uploads';
+                $path = Mage::getBaseDir('media') . DS . Atsumoriso_Blog_Model_Post::UPLOADS_FOLDER_URL;
                 if (!is_dir($path)) {
                     mkdir($path, 0777, true);
                 }
                 $uploader->save($path . DS, $fileName);
 
-                return $fileName;
+                return Atsumoriso_Blog_Model_Post::UPLOADS_FOLDER_URL . $fileName;
 
             } catch (Exception $e) {
                 Mage::getSingleton('customer/session')->addError($e->getMessage());
@@ -89,5 +103,39 @@ class Atsumoriso_Blog_Model_Post extends Mage_Core_Model_Abstract
             }
         }
     }
+
+    /**
+     *  Returns id parameter from GET query. //todo not available from controller
+     *
+     * @return mixed
+     */
+    public function getCurrentPostId()
+    {
+        $params = $this->getRequest()->getParams();
+        return $params['id'];
+    }
+
+    /**
+     * Gets current post data
+     *
+     * @return false|Mage_Core_Model_Abstract
+     */
+//    public function getCurrentBlogPost() //todo check usage and delete
+//    {
+//        //$params = $this->getRequest()->getParams();
+//        $blogpost = Mage::getModel('blog/post');
+////        $blogpost->load($params['id']);
+//        $blogpost->load($this->getCurrentPostId());
+//        return $blogpost;
+//    }
+//
+//    public function getCurrentBlogPost1($id) //todo correct method
+//    {
+//        //$params = $this->getRequest()->getParams();
+//        $blogpost = Mage::getModel('blog/post');
+////        $blogpost->load($params['id']);
+//        $blogpost->load($id);
+//        return $blogpost;
+//    }
 
 }

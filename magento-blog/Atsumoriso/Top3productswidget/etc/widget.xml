@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<widgets>
+      <atsumoriso_top3productswidget_topwidget type="atsumoriso_top3productswidget/topwidget" module="atsumoriso_top3productswidget">
+        <name>Top 3 products 99</name>
+        <description type="desc">Top products list</description>
+        <parameters>
+            <products_count translate="label">
+                <required>1</required>
+                <visible>1</visible>
+                <label>Number of Products to display</label>
+                <type>text</type>
+            </products_count>
+            <page_title translate="label">
+                <required>1</required>
+                <visible>1</visible>
+                <label>Widget Title</label>
+                <type>text</type>
+            </page_title>
+            <template>
+                <required>1</required>
+                <visible>1</visible>
+                <label>Template (how it should be displayed)</label>
+                <type>select</type>
+
+                <values>
+                    <page_three_columns_widget_left translate="label">
+                        <value>widget/index.phtml</value>
+                        <label>3 columns, widget on the left</label>
+                    </page_three_columns_widget_left>
+                    <page_two_columns_left_widget_left translate="label">
+                        <value>widget/index.phtml</value>
+                        <label>2 columns-right, widget on the right</label>
+                    </page_two_columns_left_widget_left>
+                    <page_two_columns_right_widget_right translate="label">
+                        <value>widget/index.phtml</value>
+                        <label>2 columns-left, widget on the left</label>
+                    </page_two_columns_right_widget_right>
+                </values>
+            </template>
+        </parameters>
+      </atsumoriso_top3productswidget_topwidget>
+</widgets>

@@ -7,9 +7,9 @@
     </modules>
     <global>
         <blocks>
-            <blog>
+            <atsumoriso_blog>
                 <class>Atsumoriso_Blog_Block</class>
-            </blog>
+            </atsumoriso_blog>
         </blocks>
         <models>
             <blog>
@@ -30,7 +30,9 @@
        </models>
 
         <helpers>
-            <class>Astumoriso_Blog_Helper</class>
+            <atsumoriso_blog>
+                <class>Atsumoriso_Blog_Helper</class>
+            </atsumoriso_blog>
         </helpers>
 
         <resources>
@@ -44,13 +46,13 @@
     </global>
     <frontend>
         <routers>
-            <blog>
+            <atsumoriso_blog>
                 <use>standard</use>
                 <args>
                     <module>Atsumoriso_Blog</module>
                     <frontName>blog</frontName>
                 </args>
-            </blog>
+            </atsumoriso_blog>
         </routers>
         <layout>
             <updates>
@@ -60,4 +62,41 @@
             </updates>
         </layout>
     </frontend>
+
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <atsumoriso_blog before="Mage_Adminhtml">Atsumoriso_Blog_Adminhtml</atsumoriso_blog>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+
+    <adminhtml>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <atsumoriso_blog>
+                                            <title>Atsumoriso title</title>
+                                        </atsumoriso_blog>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
 </config>

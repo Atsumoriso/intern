@@ -57,7 +57,7 @@ class Atsumoriso_Blog_PostController extends Mage_Core_Controller_Front_Action
             $blogpost->setText($post['text']);
             if($fileName != ''){
                 $oldFileName = $blogpost->getPhotoPath();
-                unlink(Atsumoriso_Blog_Model_Post::BLOG_PHOTO_FOLDER_URL  . $oldFileName);
+                unlink(Mage::getBaseDir('media')  . Atsumoriso_Blog_Model_Post::UPLOADS_FOLDER_URL. $oldFileName);
                 $blogpost->setPhotoPath($fileName);
             }
             $blogpost->save();
@@ -106,19 +106,16 @@ class Atsumoriso_Blog_PostController extends Mage_Core_Controller_Front_Action
         if(isset($post) && $post == $this->getCurrentPostId()) {
             $blogpost = $this->getCurrentBlogPost();
             $oldFileName = $blogpost->getPhotoPath();
-            unlink(Atsumoriso_Blog_Model_Post::BLOG_PHOTO_FOLDER_URL  . $oldFileName);
+            //unlink(Atsumoriso_Blog_Model_Post::BLOG_PHOTO_FOLDER_URL  . $oldFileName);
+            unlink(Mage::getBaseDir('media') . DS . $oldFileName);
             $blogpost->delete();
         }
 
         Mage::app()->getFrontController()->getResponse()->setRedirect(Atsumoriso_Blog_Model_Post::POSTS_LIST_URL);
     }
 
-
-
-
-
     /**
-     *  Returns id parameter from GET query.
+     *  Returns id parameter from GET query. //todo same in model - check usage
      *
      * @return mixed
      */
@@ -129,7 +126,7 @@ class Atsumoriso_Blog_PostController extends Mage_Core_Controller_Front_Action
     }
 
     /**
-     * Gets current post data
+     * Gets current post data //todo same in model - check usage - + SINGLE
      *
      * @return false|Mage_Core_Model_Abstract
      */

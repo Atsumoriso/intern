@@ -59,27 +59,4 @@ class Atsumoriso_Blog_Block_Posts extends Mage_Catalog_Block_Product
         return $model->getBindedProductByPostId($params['id']);
     }
 
-
-    //todo DEBUG - delete
-    public function getPostBindedProducts()
-    {
-        $params = $this->getRequest()->getParams();
-        $post = Mage::getModel('catalog/product')->getCollection()
-            ->addAttributeToSelect(['id', 'name', 'price', 'short_description', 'image', 'url_path']);
-//            ->addFieldToFilter('blog_product.post_id', array('eq' => $params['id']));
-
-        //$post
-          //  ->getSelect();
-//            ->join(
-//                array('blog_product' => 'blog_product'),
-//                "blog_product.product_id = main_table.entity_id"
-//            );
-//            ->join(
-//                array('blog_post' => 'blog_post'),
-//                "blog_post.post_id = blog_product.post_id"
-//            );
-
-        return $post;
-    }
-
 }

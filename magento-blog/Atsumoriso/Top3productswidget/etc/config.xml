@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Atsumoriso_Top3productswidget>
+            <version>1.0.0</version>
+        </Atsumoriso_Top3productswidget>
+    </modules>
+    <global>
+        <blocks>
+            <atsumoriso_top3productswidget>
+                <class>Atsumoriso_Top3productswidget_Block</class>
+            </atsumoriso_top3productswidget>
+        </blocks>
+        <models>
+            <atsumoriso_top3productswidget>
+                <class>Atsumoriso_Top3productswidget_Model</class>
+            </atsumoriso_top3productswidget>
+       </models>
+
+        <helpers>
+            <atsumoriso_top3productswidget>
+                <class>Atsumoriso_Top3productswidget_Helper</class>
+            </atsumoriso_top3productswidget>
+        </helpers>
+
+        <resources>
+            <atsumoriso_top3productswidget_setup> <!--folder name to read from-->
+                <setup>
+                    <module>Atsumoriso_Top3productswidget</module>
+                    <class>Mage_Eav_Model_Entity_Setup</class>
+                </setup>
+            </atsumoriso_top3productswidget_setup>
+        </resources>
+    </global>
+
+    <frontend>
+        <layout>
+            <updates>
+                <atsumoriso_top3productswidget>
+                    <file>widget.xml</file>
+                </atsumoriso_top3productswidget>
+            </updates>
+        </layout>
+    </frontend>
+
+
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <atsumoriso_top3productswidget before="Mage_Adminhtml">Atsumoriso_Top3productswidget_Adminhtml</atsumoriso_top3productswidget>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+
+
+
+    <adminhtml>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <education>
+                                            <title>Education</title>
+
+                                        </education>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+
+    <adminhtml>
+        <events>
+            <adminhtml_block_html_before>
+                <observers>
+                    <atsumoriso_top3widget>
+                        <!-- Add column to catalog product grid -->
+                        <class>atsumoriso_top3productswidget/adminhtml_observer</class>
+                        <method>onBlockHtmlBefore</method>
+                    </atsumoriso_top3widget>
+                </observers>
+            </adminhtml_block_html_before>
+        </events>
+    </adminhtml>
+
+</config>

@@ -1,6 +1,6 @@
 <?php
 
-class  Astumoriso_Blog_Helper_Data
+class Atsumoriso_Blog_Helper_Data extends Mage_Core_Helper_Abstract
 {
-    
+
 }

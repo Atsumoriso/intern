@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Atsumoriso_Pricegrid>
+            <version>1.0.0</version>
+        </Atsumoriso_Pricegrid>
+    </modules>
+    <global>
+        <blocks>
+            <atsumoriso_pricegrid>
+                <class>Atsumoriso_Pricegrid_Block</class>
+            </atsumoriso_pricegrid>
+        </blocks>
+        <models>
+            <atsumoriso_pricegrid>
+                <class>Atsumoriso_Pricegrid_Model</class>
+            </atsumoriso_pricegrid>
+       </models>
+
+        <helpers>
+            <atsumoriso_pricegrid>
+                <class>Atsumoriso_Pricegrid_Helper</class>
+            </atsumoriso_pricegrid>
+        </helpers>
+    </global>
+
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <atsumoriso_pricegrid before="Mage_Adminhtml">Atsumoriso_Pricegrid_Adminhtml</atsumoriso_pricegrid>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+
+    <adminhtml>
+        <events>
+            <core_block_abstract_prepare_layout_before>
+                <observers>
+                    <atsumoriso_core_block_abstract_prepare_layout_before>
+                        <type>singleton</type>
+                        <class>atsumoriso_pricegrid/observer</class>
+                        <method>addMassAction</method>
+                    </atsumoriso_core_block_abstract_prepare_layout_before>
+                </observers>
+            </core_block_abstract_prepare_layout_before>
+        </events>
+    </adminhtml>
+
+</config>
