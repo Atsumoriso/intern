@@ -24,38 +24,9 @@ class Atsumoriso_Pricegrid_Adminhtml_PriceController extends Mage_Adminhtml_Cont
                 ->addAttributeToFilter('entity_id', ['in' => $productsIdsArray])
                 ->addAttributeToSelect('price');
 
-            foreach ($productCollection as $product){
-                $price = $product->getPrice();
+            $productCollection = $this->_getNewPrice($productCollection, $operation, $value);
+            $productCollection->save();
 
-                switch ($operation){
-                    case Atsumoriso_Pricegrid_Model_Observer::OPERATION_ADDITION:
-                        $newPrice = $price + $value;
-                        break;
-
-                    case Atsumoriso_Pricegrid_Model_Observer::OPERATION_SUBTRACTION:
-                        if($value > $price){
-                            $newPrice = 0.01;
-                        } else {
-                            $newPrice = $price - $value;
-                        }
-                        break;
-
-                    case Atsumoriso_Pricegrid_Model_Observer::OPERATION_ADD_PERCENT:
-                        $newPrice = $price + ($price * $value)/100;
-                        break;
-
-                    case Atsumoriso_Pricegrid_Model_Observer::OPERATION_SUBSTRUCT_PERCENT:
-                        $newPrice = $price - ($price * $value)/100;
-                        break;
-
-                    case Atsumoriso_Pricegrid_Model_Observer::OPERATION_MULTIPLICATION:
-                        $newPrice = $price * $value;
-                        break;
-                }
-
-                $product->setPrice($newPrice);
-                $product->save();
-            }
             Mage::getSingleton('adminhtml/session')->addSuccess(
                 Mage::helper('atsumoriso_pricegrid')->__(
                     'Totally %d record(s) have been changed.', count($productsIdsArray)
@@ -67,6 +38,43 @@ class Atsumoriso_Pricegrid_Adminhtml_PriceController extends Mage_Adminhtml_Cont
 
         $this->_redirect('adminhtml/catalog_product');
 
+    }
+
+    protected function _getNewPrice($productCollection, $operation, $value)
+    {
+        foreach ($productCollection as $product) {
+            $price = $product->getPrice();
+
+            switch ($operation) {
+                case Atsumoriso_Pricegrid_Model_Observer::OPERATION_ADDITION:
+                    $newPrice = $price + $value;
+                    break;
+
+                case Atsumoriso_Pricegrid_Model_Observer::OPERATION_SUBTRACTION:
+                    if ($value > $price) {
+                        $newPrice = 0.01;
+                    } else {
+                        $newPrice = $price - $value;
+                    }
+                    break;
+
+                case Atsumoriso_Pricegrid_Model_Observer::OPERATION_ADD_PERCENT:
+                    $newPrice = $price + ($price * $value) / 100;
+                    break;
+
+                case Atsumoriso_Pricegrid_Model_Observer::OPERATION_SUBSTRUCT_PERCENT:
+                    $newPrice = $price - ($price * $value) / 100;
+                    break;
+
+                case Atsumoriso_Pricegrid_Model_Observer::OPERATION_MULTIPLICATION:
+                    $newPrice = $price * $value;
+                    break;
+            }
+
+            $product->setPrice($newPrice);
+
+        }
+        return $productCollection;
     }
 
 }
