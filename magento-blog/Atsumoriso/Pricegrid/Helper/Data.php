@@ -9,6 +9,11 @@ class Atsumoriso_Pricegrid_Helper_Data extends Mage_Core_Helper_Abstract
         return $value;
     }
 
+    /**
+     * Checks value before multiplication
+     * @param $value
+     * @return bool
+     */
     public function validateValueForMultiplication($value)
     {
         if($value < 0.01)
@@ -17,36 +22,71 @@ class Atsumoriso_Pricegrid_Helper_Data extends Mage_Core_Helper_Abstract
             return true;
     }
 
-    public function performOperationSubstruction($price, $value)
+    /**
+     * Performs operation Addition.
+     *
+     * @param $price
+     * @param $valueToChangePrice
+     * @return mixed
+     */
+    public function performOperationAddition($price, $valueToChangePrice)
     {
-        if ($value > $price) {
+        return $price + $valueToChangePrice;
+    }
+
+    /**
+     * Performs operation Substruction.
+     *
+     * @param $price
+     * @param $valueToChangePrice
+     * @return int
+     */
+    public function performOperationSubstruction($price, $valueToChangePrice)
+    {
+        if ($valueToChangePrice > $price) {
             $newPrice = 0;
         } else {
-            $newPrice = $price - $value;
+            $newPrice = $price - $valueToChangePrice;
         }
         return $newPrice;
     }
 
-    public function performOperationAddition($price, $value)
+    /**
+     * Performs operation Percent addition.
+     *
+     * @param $price
+     * @param $percent
+     * @return mixed
+     */
+    public function performOperationAddPercent($price, $percent)
     {
-        return $price + $value;
+        return $price + ($price * $percent) / 100;
     }
 
-    public function performOperationAddPercent($price, $value)
+    /**
+     * Performs operation Percent substruction.
+     *
+     * @param $price
+     * @param $percent
+     * @return mixed
+     */
+    public function performOperationSubstructPercent($price, $percent)
     {
-        return $price + ($price * $value) / 100;
-    }
-
-    public function performOperationSubstructPercent($price, $value)
-    {
-        if($value >100){
+        if($percent >100){
             $newPrice = 0;
         } else {
-            $newPrice = $price - ($price * $value) / 100;
+            $newPrice = $price - ($price * $percent) / 100;
         }
         return $newPrice;
     }
 
+    /**
+     * Performs operation Multiplication.
+     *
+     * @param $price
+     * @param $value
+     * @return mixed
+     */
     public function performOperationMultiplication($price, $value)
     {
         return $price * $value;

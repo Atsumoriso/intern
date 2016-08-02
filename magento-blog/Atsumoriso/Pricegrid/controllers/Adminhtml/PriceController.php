@@ -18,24 +18,37 @@ class Atsumoriso_Pricegrid_Adminhtml_PriceController extends Mage_Adminhtml_Cont
         if ($operation == Atsumoriso_Pricegrid_Model_Observer::OPERATION_MULTIPLICATION
             && Mage::helper('atsumoriso_pricegrid')->validateValueForMultiplication($value) == true){
 
-            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('atsumoriso_pricegrid')->__('Operation is not allowed. '));
+            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('atsumoriso_pricegrid')->__(
+                'Not valid value for selected operation.'));
 
-        } else {
-            $productCollection = Mage::getModel('catalog/product')->getCollection()
-                ->addAttributeToFilter('entity_id', ['in' => $productsIdsArray])
-                ->addAttributeToSelect('price');
+        } elseif($this->_saveNewPriceToProductCollection($productsIdsArray, $operation, $value) == true) {
 
-            $productCollection = $this->_setNewPriceToCollection($productCollection, $operation, $value);
-            $productCollection->save();
-
-            Mage::getSingleton('adminhtml/session')->addSuccess(
-                Mage::helper('atsumoriso_pricegrid')->__(
-                    'Totally %d record(s) have been changed.', count($productsIdsArray)
-                )
+            Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('atsumoriso_pricegrid')->__(
+                'Totally %d record(s) have been changed.', count($productsIdsArray))
             );
+        } else {
+            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('atsumoriso_pricegrid')->__(
+                'Something went wrong...  Please try again.'));
         }
 
         $this->_redirect('adminhtml/catalog_product');
+    }
+
+
+
+    protected function _saveNewPriceToProductCollection($productsIdsArray, $operation, $value)
+    {
+        $productCollection = Mage::getModel('catalog/product')->getCollection()
+            ->addAttributeToFilter('entity_id', ['in' => $productsIdsArray])
+            ->addAttributeToSelect('price');
+
+        $productCollection = $this->_setNewPriceToCollection($productCollection, $operation, $value);
+        $productCollection->save();
+
+        if($productCollection->save())
+            return true;
+        else
+            return false;
     }
 
     protected function _setNewPriceToCollection($productCollection, $operation, $value)
