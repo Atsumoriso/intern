@@ -4,7 +4,7 @@
         <name>Top 3 products 99</name>
         <description type="desc">Top products list</description>
         <parameters>
-            <products_count translate="label">
+            <products_count translate="label"> <!--menu parameters for widget on admin/widget_instance/edit/instance_id/7 widget options-->
                 <required>1</required>
                 <visible>1</visible>
                 <label>Number of Products to display</label>
@@ -23,18 +23,15 @@
                 <type>select</type>
 
                 <values>
-                    <page_three_columns_widget_left translate="label">
+                    <page_three_columns translate="label">
                         <value>widget/index.phtml</value>
                         <label>3 columns, widget on the left</label>
-                    </page_three_columns_widget_left>
-                    <page_two_columns_left_widget_left translate="label">
+                    </page_three_columns>
+
+                    <page_two_columns_right translate="label">
                         <value>widget/index.phtml</value>
                         <label>2 columns-right, widget on the right</label>
-                    </page_two_columns_left_widget_left>
-                    <page_two_columns_right_widget_right translate="label">
-                        <value>widget/index.phtml</value>
-                        <label>2 columns-left, widget on the left</label>
-                    </page_two_columns_right_widget_right>
+                    </page_two_columns_right>
                 </values>
             </template>
         </parameters>

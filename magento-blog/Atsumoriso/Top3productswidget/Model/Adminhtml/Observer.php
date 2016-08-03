@@ -15,15 +15,26 @@ class Atsumoriso_Top3productswidget_Model_Adminhtml_Observer
                 $block->addColumn('is_top', array(
                     'header'      => Mage::helper('atsumoriso_top3productswidget')->__('Top rated products'),
                     'width'       => '30px',
-                    //'align'     => 'left',
+                    'align'       => 'center',
                     'name'        => 'is_top',
                     'index'       => 'is_top',
                     'type'        => 'options',
                     'options'     => $options,
                 ));
+
                 break;
         }
 
     }
 
+    public function onEavLoadBefore(Varien_Event_Observer $observer) {
+        $collection = $observer->getCollection();
+
+        if (!isset($collection)) return;
+
+        if (is_a($collection, 'Mage_Catalog_Model_Resource_Product_Collection')) {
+            //adding attribute 'is_top' to products grid
+            $collection->addAttributeToSelect('is_top');
+        }
+    }
 }

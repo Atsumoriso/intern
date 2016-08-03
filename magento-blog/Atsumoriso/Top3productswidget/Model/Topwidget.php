@@ -24,9 +24,7 @@ class Atsumoriso_Top3productswidget_Model_Topwidget extends Mage_Core_Model_Abst
         $products = Mage::getModel('catalog/product')->getCollection()
             ->addFieldToFilter('is_top',['eq'=> self::OPTION_TOP])
             ->addAttributeToSelect('name')
-//            ->addAttributeToSelect('image')
             ->addAttributeToSelect('thumbnail');
-//            ->addAttributeToSelect('url_path');
         $products->getSelect()->order(new Zend_Db_Expr('RAND()'));
 
         return $products;
