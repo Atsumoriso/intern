@@ -11,14 +11,19 @@ class Atsumoriso_Pricegrid_Adminhtml_PriceController extends Mage_Adminhtml_Cont
         $operation        = $params['operation'];
         $value            = $params['value'];
 
-        $value = Mage::getModel('atsumoriso_pricegrid/adminhtml_validate')->cleanDigitInput($value);
-        $errorMessage = Mage::getModel('atsumoriso_pricegrid/adminhtml_validate')->checkIfErrorsExist($operation,$value);
+        $validator = Mage::getModel('atsumoriso_pricegrid/adminhtml_validate');
+        $session = Mage::getSingleton('adminhtml/session');
+        $helper = Mage::helper('atsumoriso_pricegrid');
+        $updatePrice = Mage::getModel('atsumoriso_pricegrid/adminhtml_updateprice');
+
+        $value = $validator->cleanDigitInput($value);
+        $errorMessage = $validator->checkIfErrorsExist($operation,$value);
 
         if(!empty($errorMessage)){
-            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('atsumoriso_pricegrid')->__($errorMessage));
+            $session->addError($helper->__($errorMessage));
 
-        } elseif(Mage::getModel('atsumoriso_pricegrid/adminhtml_updateprice')->saveNewPriceToProductCollection($productsIdsArray, $operation, $value) == true){
-            Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('atsumoriso_pricegrid')->__(
+        } elseif($updatePrice->saveNewPriceToProductCollection($productsIdsArray, $operation, $value) == true){
+            $session->addSuccess($helper->__(
                 'Totally %d record(s) have been changed.', count($productsIdsArray))
             );
         }

@@ -18,7 +18,7 @@ class Atsumoriso_Pricegrid_Model_Adminhtml_Updateprice
     {
         return array(
             self::OPERATION_ADDITION             => Mage::helper('atsumoriso_pricegrid')->__('Add'),
-            self::OPERATION_SUBSTRACTION          => Mage::helper('atsumoriso_pricegrid')->__('Substruct'),
+            self::OPERATION_SUBSTRACTION         => Mage::helper('atsumoriso_pricegrid')->__('Substruct'),
             self::OPERATION_ADD_PERCENT          => Mage::helper('atsumoriso_pricegrid')->__('Add percent'),
             self::OPERATION_SUBSTRUCT_PERCENT    => Mage::helper('atsumoriso_pricegrid')->__('Substruct percent'),
             self::OPERATION_MULTIPLICATION       => Mage::helper('atsumoriso_pricegrid')->__('Multiplicate'),
@@ -46,12 +46,7 @@ class Atsumoriso_Pricegrid_Model_Adminhtml_Updateprice
      */
     public function performOperationSubstruction($price, $valueToChangePrice)
     {
-        if ($valueToChangePrice > $price) {
-            $newPrice = $price;
-        } else {
-            $newPrice = $price - $valueToChangePrice;
-        }
-        return $newPrice;
+        return $price - $valueToChangePrice;
     }
 
     /**
