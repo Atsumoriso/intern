@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Atsumoriso_Shippingcost>
+            <version>1.0.1</version>
+        </Atsumoriso_Shippingcost>
+    </modules>
+    <global>
+        <blocks>
+            <atsumoriso_shippingcost>
+                <class>Atsumoriso_Shippingcost_Block</class>
+            </atsumoriso_shippingcost>
+        </blocks>
+        <models>
+            <atsumoriso_shippingcost>
+                <class>Atsumoriso_Shippingcost_Model</class>
+            </atsumoriso_shippingcost>
+        </models>
+
+        <helpers>
+            <atsumoriso_shippingcost>
+                <class>Atsumoriso_Shippingcost_Helper</class>
+            </atsumoriso_shippingcost>
+        </helpers>
+
+        <resources>
+            <atsumoriso_shippingcost_setup>
+                <setup>
+                    <module>Atsumoriso_Shippingcost</module>
+                    <class>Mage_Sales_Model_Resource_Setup</class>
+                    <!--<class>Mage_Eav_Model_Entity_Setup</class>-->
+                </setup>
+            </atsumoriso_shippingcost_setup>
+        </resources>
+
+        <!--adding item to the quote-->
+        <sales>
+            <quote>
+                <totals>
+                    <atsumoriso_shippingcost>
+                        <class>atsumoriso_shippingcost/total_quote</class>
+                        <after>subtotal</after>
+                        <before>tax</before>
+                    </atsumoriso_shippingcost>
+                </totals>
+                <product_attributes>
+                    <additional_shipping_cost/>
+                </product_attributes>
+            </quote>
+
+        </sales>
+
+        <!--passes value from quote to order and from order to quote -->
+        <fieldsets>
+            <sales_convert_quote_item>
+                <additional_shipping_cost>
+                    <to_order_item>*</to_order_item>
+                </additional_shipping_cost>
+            </sales_convert_quote_item>
+            <sales_convert_order_item>
+                <additional_shipping_cost>
+                    <to_quote_item>*</to_quote_item>
+                </additional_shipping_cost>
+            </sales_convert_order_item>
+        </fieldsets>
+
+        <blocks>
+            <adminhtml>
+                <rewrite>
+                    <sales_order_totals>Atsumoriso_Shippingcost_Block_Adminhtml_Sales_Order_Totals</sales_order_totals>
+                </rewrite>
+            </adminhtml>
+        </blocks>
+
+    </global>
+
+    <frontend>
+        <events>
+            <!--<checkout_cart_save_before>-->
+
+            <sales_quote_item_set_product>
+                <observers>
+                    <atsumoriso_shippingcost>
+                        <class>atsumoriso_shippingcost/observer</class>
+                        <method>calculateTotalShippingCostForQuoteProducts</method>
+                    </atsumoriso_shippingcost>
+                </observers>
+            </sales_quote_item_set_product>
+        </events>
+    </frontend>
+
+    <adminhtml>
+        <events>
+            <core_block_abstract_to_html_before>
+                <observers>
+                    <atsumoriso_shippingcost>
+                        <!-- Add column to catalog product grid -->
+                        <class>atsumoriso_shippingcost/adminhtml_observer</class>
+                        <method>onBlockHtmlBefore</method>
+                    </atsumoriso_shippingcost>
+                </observers>
+            </core_block_abstract_to_html_before>
+
+            <!--<core_block_abstract_prepare_layout_before> - collection is null-->
+            <!--<eav_collection_abstract_load_before>       - works! -->
+            <catalog_product_collection_load_before> <!--works! -->
+                <observers>
+                    <atsumoriso_shippingcost>
+                        <!-- Add column to product list -->
+                        <class>atsumoriso_shippingcost/adminhtml_observer</class>
+                        <method>onEavLoadBefore</method>
+                    </atsumoriso_shippingcost>
+                </observers>
+            </catalog_product_collection_load_before>
+
+        </events>
+    </adminhtml>
+
+</config>

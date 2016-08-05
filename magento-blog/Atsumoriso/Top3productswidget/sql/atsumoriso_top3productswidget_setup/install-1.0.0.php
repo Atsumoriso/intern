@@ -19,7 +19,7 @@ $installer->addAttribute('catalog_product', 'is_top',  array(
         'backend'           => '',
         'frontend'          => '',
         'label'             => 'Is in top list',
-        'input'             => 'select',
+        'input'             => 'boolean',
         'class'             => '',
         'source'            => 'eav/entity_attribute_source_boolean',
         'global'            => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_GLOBAL,
