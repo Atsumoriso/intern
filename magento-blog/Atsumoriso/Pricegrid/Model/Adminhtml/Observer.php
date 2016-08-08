@@ -2,6 +2,13 @@
 
 class Atsumoriso_Pricegrid_Model_Adminhtml_Observer
 {
+    /** @array array of possible price update operations */
+    protected $operations = [];
+
+    public function __construct()
+    {
+        $this->operations = Mage::getModel('atsumoriso_pricegrid/adminhtml_updatePrice_lib_operations')->getOperations();
+    }
 
     public function addMassAction($observer)
     {
@@ -12,8 +19,6 @@ class Atsumoriso_Pricegrid_Model_Adminhtml_Observer
             && $block->getRequest()->getControllerName() == 'catalog_product') {
 
             $block->setMassactionIdField('update_price');
-            $operations = Atsumoriso_Pricegrid_Model_Adminhtml_Updateprice::getOperationsArray();
-           // array_unshift($operations, array('label'=>'', 'value'=>''));
 
             $block->addItem('update_price', array(
                 'label'=> $helper->__('Update price'),
@@ -24,7 +29,7 @@ class Atsumoriso_Pricegrid_Model_Adminhtml_Observer
                         'type' => 'select',
                         'class' => 'required-entry',
                         'label' => $helper->__('Operation'),
-                        'values' => $operations
+                        'values' => $this->operations,
                     ),
                     'value' => array(
                         'name' => 'value',
@@ -37,4 +42,6 @@ class Atsumoriso_Pricegrid_Model_Adminhtml_Observer
             ));
         }
     }
+
+
 }

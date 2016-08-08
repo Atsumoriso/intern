@@ -22,6 +22,29 @@
                 <class>Atsumoriso_Pricegrid_Helper</class>
             </atsumoriso_pricegrid>
         </helpers>
+
+        <update_price_mass_action>
+            <operations>
+                <addition>
+                    <class>atsumoriso_pricegrid/adminhtml_updatePrice_addition</class>
+                    <label>Add</label>
+                </addition>
+                <substraction>
+                    <class>atsumoriso_pricegrid/adminhtml_updatePrice_substraction</class>
+                    <label>Substract</label>
+                </substraction>
+                <add_percent>
+                    <class>atsumoriso_pricegrid/adminhtml_updatePrice_addPercent</class>
+                    <label>Add percent</label>
+                </add_percent>
+                <substract_percent>
+                    <class>atsumoriso_pricegrid/adminhtml_updatePrice_substractPercent</class>
+                    <label>Substract percent</label>
+                </substract_percent>
+
+            </operations>
+        </update_price_mass_action>
+
     </global>
 
     <admin>
