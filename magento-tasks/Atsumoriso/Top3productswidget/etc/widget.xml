@@ -1,19 +1,21 @@
 <?xml version="1.0"?>
 <widgets>
-      <atsumoriso_top3productswidget_topwidget type="atsumoriso_top3productswidget/topwidget" module="atsumoriso_top3productswidget">
-        <name>Top 3 products 99</name>
+      <atsumoriso_top3productswidget type="atsumoriso_top3productswidget/topwidget" module="atsumoriso_top3productswidget">
+        <name>Top 3 products !!</name>
         <description type="desc">Top products list</description>
         <parameters>
             <products_count translate="label"> <!--menu parameters for widget on admin/widget_instance/edit/instance_id/7 widget options-->
                 <required>1</required>
                 <visible>1</visible>
                 <label>Number of Products to display</label>
+                <value>5</value>
                 <type>text</type>
             </products_count>
             <page_title translate="label">
                 <required>1</required>
                 <visible>1</visible>
                 <label>Widget Title</label>
+                <value>Title to display on frontend</value>
                 <type>text</type>
             </page_title>
             <template>
@@ -21,13 +23,11 @@
                 <visible>1</visible>
                 <label>Template (how it should be displayed)</label>
                 <type>select</type>
-
                 <values>
-                    <page_three_columns translate="label">
+                    <default translate="label">
                         <value>widget/index.phtml</value>
                         <label>3 columns, widget on the left</label>
-                    </page_three_columns>
-
+                    </default>
                     <page_two_columns_right translate="label">
                         <value>widget/index.phtml</value>
                         <label>2 columns-right, widget on the right</label>
@@ -35,5 +35,5 @@
                 </values>
             </template>
         </parameters>
-      </atsumoriso_top3productswidget_topwidget>
+      </atsumoriso_top3productswidget>
 </widgets>

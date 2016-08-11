@@ -9,6 +9,8 @@ class Atsumoriso_Top3productswidget_Model_Adminhtml_Observer
 
         $options = Atsumoriso_Top3productswidget_Model_Topwidget::getOptionsArray();
 
+        //array_unshift($options, array('label'=>'', 'value'=>''));
+
         switch ($block->getType()) {
             case 'adminhtml/catalog_product_grid':
                 /* @var $block Mage_Adminhtml_Block_Catalog_Product_Grid */
@@ -18,9 +20,11 @@ class Atsumoriso_Top3productswidget_Model_Adminhtml_Observer
                     'align'       => 'center',
                     'name'        => 'is_top',
                     'index'       => 'is_top',
+                    'filter_index'       => 'is_top',
                     'type'        => 'options',
                     'options'     => $options,
                 ));
+                $block->sortColumnsByOrder();//->addColumnsOrder('is_top', 1500)
 
                 break;
         }
@@ -32,9 +36,9 @@ class Atsumoriso_Top3productswidget_Model_Adminhtml_Observer
 
         if (!isset($collection)) return;
 
-        if (is_a($collection, 'Mage_Catalog_Model_Resource_Product_Collection')) {
+        if (is_a($collection, 'Mage_Catalog_Model_Resource_Product_Collection')) { // 'Mage_Eav_Model_Entity_Collection_Abstract'
             //adding attribute 'is_top' to products grid
-            $collection->addAttributeToSelect('is_top');
+            $collection->addAttributeToSelect('is_top'); //->setOrder('is_top', strtoupper('desc'));;
         }
     }
 }

@@ -35,7 +35,7 @@ if(!empty($post->getPostId())){
         <?php if($post->getPhotoPath() != null):?>
             Previously added photo:
             <div>
-                <img src="<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)?>/media/uploads/<?=$post->getPhotoPath()?>"  width="500" title="<?=$post->getHeadline()?>">
+                <img src="<?=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)?><?=$post->getPhotoPath()?>"  width="500" title="<?=$post->getHeadline()?>">
             </div>
 
             <label for="attachment">Add new photo (previous photo will deleted)</label>

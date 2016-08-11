@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Atsumoriso_Top3productswidget>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </Atsumoriso_Top3productswidget>
     </modules>
     <global>
@@ -24,7 +24,7 @@
         </helpers>
 
         <resources>
-            <atsumoriso_top3productswidget_setup> <!--sql -data install scripts folder name to read from-->
+            <atsumoriso_top3productswidget_setup>
                 <setup>
                     <module>Atsumoriso_Top3productswidget</module>
                     <class>Mage_Eav_Model_Entity_Setup</class>
@@ -103,8 +103,8 @@
                     </atsumoriso_top3productswidget>
                 </observers>
             </catalog_product_collection_load_before>
-        </events>
 
+        </events>
     </adminhtml>
 
 </config>

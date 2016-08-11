@@ -9,6 +9,7 @@ $installer = $this;
 /**
  * Creates new product attribute called "is_top"
  *
+ *
  */
 
 $installer->startSetup();

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<layout version="0.1.0">
+
+    <default>
+        <reference name="left">
+            <block type="atsumoriso_top3productswidget/topwidget" name="atsumoriso_topwidget" template="widget/index.phtml"/>
+        </reference>
+    </default>
+
+    <page_two_columns_right>
+        <reference name="right">
+            <block type="atsumoriso_top3productswidget/topwidget" name="atsumoriso_topwidget_right" template="widget/index.phtml"/>
+        </reference>
+    </page_two_columns_right>
+
+</layout>

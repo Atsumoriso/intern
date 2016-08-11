@@ -1,0 +1,48 @@
+<?php
+$products = $this->getTop3Products();
+$widget = $this->getTop3ProductsWidgetParams();
+
+?>
+
+
+<?php if (!empty($products)): ?>
+    <div class="block block-list block-viewed">
+        <div class="block-title">
+            <strong><span><?=$widget['page_title']?></span></strong>
+        </div>
+        <div class="block-content">
+            <ol id="recently-viewed-items" class="mini-products-list">
+
+                <?php $itemsDisplayedOnOnePage = 1;?>
+                <?php foreach ($products as $product): ?>
+                    <?php $number = $widget['products_count'] ?>
+                    <?php //$var1 = 3 ?>
+
+                    <?php if($itemsDisplayedOnOnePage <= $number): ?>
+
+                    <li class="item"><?php //=$product->getProductUrl() ?>
+                        <?php //=Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . $product->getUrlKey() . '.html'?>
+                        <a href="<?php echo $product->getProductUrl() ?>">
+                            <span class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($product, 'thumbnail')->resize(50, 50)->setWatermarkSize('30x10'); ?>" width="50" height="50" alt="<?php echo $this->escapeHtml($product->getProductName()) ?>" /></span>
+                        </a>
+                        <div class="product-details">
+                            <p class="product-name">
+                                <a href="<?php echo $product->getProductUrl() ?>">
+                                    <?php echo $this->helper('catalog/output')->productAttribute($product, $product->getName() , 'name') ?>
+                                </a>
+                            </p>
+                        </div>
+                    </li>
+
+                    <?php endif; ?>
+                    <?php $itemsDisplayedOnOnePage++; ?>
+
+                <?php endforeach; ?>
+
+            </ol>
+            <script type="text/javascript">decorateList('recently-viewed-items');</script>
+        </div>
+    </div>
+<?php endif; ?>
+
+
